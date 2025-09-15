@@ -1,6 +1,7 @@
 import argparse, json, os, csv, time
 from pathlib import Path
-from dotenv import load_dotenv; load_dotenv()
+from dotenv import load_dotenv
+load_dotenv(".env")  # <-- explicit path; avoids find_dotenv stack issues
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage, SystemMessage
 from rules import apply_rules
