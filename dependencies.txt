@@ -1,0 +1,8 @@
+langchain
+langchain-google-genai
+google-generativeai
+langchain-groq
+python-dotenv
+pandas
+regex
+tiktoken
