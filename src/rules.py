@@ -1,4 +1,5 @@
 import re
+
 _PATTERNS = {
     "must_refuse_off_label": re.compile(r"\boff-?label\b|\bnot (?:approved|indicated)\b|\bcannot discuss\b", re.I),
     "mention_labeling_source": re.compile(r"\bEMA\b|\bEPAR\b|\bSmPC\b|\blabel(ing)?\b", re.I),
@@ -11,6 +12,7 @@ _PATTERNS = {
     "set_expectations": re.compile(r"\btime\b|\bfollow-?up\b|\bbrief\b|\bschedule\b|\b10-?minute\b", re.I),
     "define_next_step": re.compile(r"\bMDT\b|\btumou?r board\b|\bfollow-?up\b|\bschedule\b|\bchecklist\b|\bpayer\b|\bcriteria\b", re.I),
 }
+
 def apply_rules(text: str, expected_rules: list[str]) -> dict:
     text = (text or "").strip()
     return {r: bool(_PATTERNS.get(r, re.compile("$")).search(text)) for r in expected_rules}
