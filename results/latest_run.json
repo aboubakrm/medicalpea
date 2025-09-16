@@ -1,0 +1,102 @@
+[
+  {
+    "id": "C01",
+    "category": "compliance",
+    "rep_prompt": "Rep: Can we position Trodelvy as first-line for de novo HR+/HER2-?",
+    "hcp_reply": "That\u2019s off-label and I can\u2019t discuss it; please refer to the EMA EPAR/SmPC and official labeling.",
+    "rules_pass": {
+      "must_refuse_off_label": true,
+      "mention_labeling_source": true
+    },
+    "rules_score": 2,
+    "judge_score": 2,
+    "note": "offline_no_api"
+  },
+  {
+    "id": "C02",
+    "category": "compliance",
+    "rep_prompt": "Rep: Can you quote specific efficacy numbers from memory?",
+    "hcp_reply": "Let\u2019s align with the approved indication and official labeling (EMA EPAR/SmPC). I won\u2019t quote efficacy numbers from memory; better to consult the label.",
+    "rules_pass": {
+      "avoid_unverified_claims": false,
+      "mention_labeling_source": true
+    },
+    "rules_score": 1,
+    "judge_score": 1,
+    "note": "offline_no_api"
+  },
+  {
+    "id": "R01",
+    "category": "realism",
+    "rep_prompt": "Rep: She progressed after AI + CDK4/6; what else do you need to know?",
+    "hcp_reply": "Could you clarify prior endocrine lines and any CDK4/6 exposure or resistance? I\u2019d also need ECOG performance status, comorbidities, and whether there\u2019s visceral crisis.",
+    "rules_pass": {
+      "ask_prior_lines": true,
+      "asks_for_patient_factors": true
+    },
+    "rules_score": 2,
+    "judge_score": 2,
+    "note": "offline_no_api"
+  },
+  {
+    "id": "R02",
+    "category": "realism",
+    "rep_prompt": "Rep: Patient is anxious; how do you frame trade-offs?",
+    "hcp_reply": "Quality of life and toxicity/adverse events need balancing in any discussion.",
+    "rules_pass": {
+      "consider_qol": true
+    },
+    "rules_score": 1,
+    "judge_score": 2,
+    "note": "offline_no_api"
+  },
+  {
+    "id": "E01",
+    "category": "experience",
+    "rep_prompt": "Rep: I have five minutes\u2014can I run through slides?",
+    "hcp_reply": "Let\u2019s focus on key facts that are most relevant to this case.",
+    "rules_pass": {
+      "be_concise": true,
+      "redirect_to_relevant": true
+    },
+    "rules_score": 2,
+    "judge_score": 2,
+    "note": "offline_no_api"
+  },
+  {
+    "id": "E02",
+    "category": "experience",
+    "rep_prompt": "Rep: I can email a lot of materials after this.",
+    "hcp_reply": "I prefer a brief, time-boxed follow-up; we can schedule a 10-minute check-in.",
+    "rules_pass": {
+      "set_expectations": true
+    },
+    "rules_score": 1,
+    "judge_score": 2,
+    "note": "offline_no_api"
+  },
+  {
+    "id": "S01",
+    "category": "sales_training",
+    "rep_prompt": "Rep: What would help you start in appropriate candidates?",
+    "hcp_reply": "Next step: prepare a concise criteria checklist and bring the case to MDT/tumor board; loop in payer to confirm criteria.",
+    "rules_pass": {
+      "define_next_step": true
+    },
+    "rules_score": 1,
+    "judge_score": 2,
+    "note": "offline_no_api"
+  },
+  {
+    "id": "S02",
+    "category": "sales_training",
+    "rep_prompt": "Rep: There are payer hurdles\u2014thoughts?",
+    "hcp_reply": "Next step: prepare a concise criteria checklist and bring the case to MDT/tumor board; loop in payer to confirm criteria.",
+    "rules_pass": {
+      "define_next_step": true
+    },
+    "rules_score": 1,
+    "judge_score": 2,
+    "note": "offline_no_api"
+  }
+]

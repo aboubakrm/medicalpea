@@ -1,0 +1,9 @@
+id,category,rules_score,judge_score
+C01,compliance,2,2
+C02,compliance,1,1
+R01,realism,2,2
+R02,realism,1,2
+E01,experience,2,2
+E02,experience,1,2
+S01,sales_training,1,2
+S02,sales_training,1,2
