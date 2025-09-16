@@ -3,14 +3,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv(".env")  # <-- explicit path; avoids find_dotenv stack issues
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from rules import apply_rules
 from judge import judge
 def simulator():
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise RuntimeError("Missing GEMINI_API_KEY in environment.")
-    return ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.3, google_api_key=api_key)
+    return ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0, google_api_key=api_key)
 def run(dataset_path: Path, prompt_path: Path):
     system_prompt = prompt_path.read_text(encoding="utf-8")
     llm = simulator()
