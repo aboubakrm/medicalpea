@@ -1,0 +1,9 @@
+{
+  "eval_id": "S50",
+  "eval_file": "evals/single/S50.json",
+  "timestamp": "2025-09-18T16:55:22.150595Z",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Which stratifiers do you need before answering further on-label?",
+  "model_output": "I need to know ER, PR, and HER2 status, prior lines of therapy (especially CDK4/6 exposure), performance status, presence of visceral disease or crisis, and the main treatment goal. With these, I can give an on-label perspective."
+}

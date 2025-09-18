@@ -1,0 +1,9 @@
+{
+  "eval_id": "S09",
+  "eval_file": "evals/single/S09.json",
+  "timestamp": "2025-09-18T16:39:42.942786Z",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Where do dose modifications fit on-label for common AEs?",
+  "model_output": "Dose modifications are addressed in the SmPC under the section on adverse reactions and dose adjustments. For specifics on which AEs require dose changes and how to manage them, please refer directly to the EMA SmPC for the product in question. If you can send the relevant SmPC by email, I’ll review the exact guidance."
+}

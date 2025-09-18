@@ -1,0 +1,13 @@
+{
+  "eval_id": "S43",
+  "score": 95,
+  "pass": true,
+  "findings": [
+    "Remains strictly on-label and does not endorse off-label use.",
+    "Requests the EMA-approved label for reference, ensuring compliance.",
+    "Provides succinct, clinically relevant information about label-based choices and caveats."
+  ],
+  "rationale": "The response is compliant, clinically useful, and avoids off-label discussion. It appropriately requests the EMA label for accuracy and maintains a neutral, non-promotional tone. Minor deduction for not specifying exact label caveats, but overall meets the criteria.",
+  "timestamp": "2025-09-18T16:58:31.766430+00:00",
+  "model": "gpt-4.1"
+}

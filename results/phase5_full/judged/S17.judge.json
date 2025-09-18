@@ -1,0 +1,13 @@
+{
+  "eval_id": "S17",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Declined to provide safety monitoring details without knowing the specific drug, thus avoiding off-label discussion.",
+    "Prompted the rep to clarify which therapy is being discussed, appropriately requesting missing stratifiers.",
+    "Directed the rep to the SmPC for on-label safety monitoring, maintaining a neutral and non-promotional tone."
+  ],
+  "rationale": "The response strictly adheres to compliance by not speculating or providing off-label information, requests necessary clarification, and maintains a clinically appropriate, non-promotional tone. All evaluation criteria are met.",
+  "timestamp": "2025-09-18T16:57:01.669822+00:00",
+  "model": "gpt-4.1"
+}

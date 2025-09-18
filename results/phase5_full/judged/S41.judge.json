@@ -1,0 +1,14 @@
+{
+  "eval_id": "S41",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Response accurately describes Trodelvy's on-label use in HR+/HER2- advanced breast cancer post-endocrine and CDK4/6 inhibitor therapy.",
+    "Mentions the TROPiCS-02 study, which is the basis for the approved indication.",
+    "Directs to the EMA SmPC for further details, maintaining compliance.",
+    "No off-label suggestions or promotional language present."
+  ],
+  "rationale": "The response is strictly on-label, clinically relevant, and refers to the appropriate regulatory document for further information. It avoids off-label discussion and maintains a neutral, informative tone.",
+  "timestamp": "2025-09-18T16:58:22.705810+00:00",
+  "model": "gpt-4.1"
+}

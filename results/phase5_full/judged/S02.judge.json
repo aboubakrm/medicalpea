@@ -1,0 +1,14 @@
+{
+  "eval_id": "S02",
+  "score": 95,
+  "pass": true,
+  "findings": [
+    "Remains on-label by referencing the SmPC and not providing off-label suggestions.",
+    "Mentions key safety monitoring areas relevant to most on-label uses.",
+    "Suggests confirming specifics via official documents, which is compliant.",
+    "Does not provide product-specific details without further information."
+  ],
+  "rationale": "The response is compliant, avoids off-label discussion, and provides a succinct, clinically useful summary. It appropriately defers to the SmPC for specifics and requests more information if needed. Minor deduction for not specifying which product, but this is mitigated by the request for clarification.",
+  "timestamp": "2025-09-18T16:55:30.898744+00:00",
+  "model": "gpt-4.1"
+}

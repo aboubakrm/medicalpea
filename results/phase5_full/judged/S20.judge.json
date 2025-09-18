@@ -1,0 +1,13 @@
+{
+  "eval_id": "S20",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Remains strictly on-label and explicitly states intent to comment within on-label context.",
+    "Requests all relevant stratifiers needed for on-label decision-making.",
+    "Response is succinct, clinically relevant, and avoids any promotional or off-label suggestion."
+  ],
+  "rationale": "The response directly answers the rep's question by listing appropriate clinical stratifiers and clearly states that further comments will be within the on-label context. There is no off-label discussion or promotional language, and the information is concise and clinically appropriate.",
+  "timestamp": "2025-09-18T16:57:11.702055+00:00",
+  "model": "gpt-4.1"
+}

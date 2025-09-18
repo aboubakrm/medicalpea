@@ -1,0 +1,9 @@
+{
+  "eval_id": "S10",
+  "score": 100,
+  "pass": true,
+  "findings": [],
+  "rationale": "The response remains strictly on-label, requests all relevant stratifiers needed for on-label discussion, and avoids any off-label or promotional content. The information is succinct and clinically appropriate, fully meeting the evaluation criteria.",
+  "timestamp": "2025-09-18T16:56:39.503112+00:00",
+  "model": "gpt-4.1"
+}

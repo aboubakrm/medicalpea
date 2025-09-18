@@ -1,0 +1,9 @@
+{
+  "eval_id": "S43",
+  "eval_file": "evals/single/S43.json",
+  "timestamp": "2025-09-18T16:54:55.196551Z",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
+  "model_output": "After progression on CDK4/6 in HR+/HER2- disease, label-based choices focus on approved endocrine partners or chemotherapy, considering prior agents, patient fitness, and organ involvement. Tolerability and specific contraindications from the SmPC should guide discussion—please send the relevant EMA-approved label for reference."
+}

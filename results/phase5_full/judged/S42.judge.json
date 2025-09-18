@@ -1,0 +1,13 @@
+{
+  "eval_id": "S42",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Response directs to the EMA-approved SmPC, ensuring on-label compliance.",
+    "Declines to provide specifics without knowing the agent or patient context, appropriately requesting missing stratifiers.",
+    "No off-label or promotional content present."
+  ],
+  "rationale": "The response is fully compliant, avoids off-label discussion, and requests necessary information to provide an accurate, on-label summary. It is succinct and maintains a neutral, non-promotional tone.",
+  "timestamp": "2025-09-18T16:58:28.143740+00:00",
+  "model": "gpt-4.1"
+}

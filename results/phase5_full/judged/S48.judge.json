@@ -1,0 +1,9 @@
+{
+  "eval_id": "S48",
+  "score": 100,
+  "pass": true,
+  "findings": [],
+  "rationale": "The response remains strictly on-label, requests necessary clinical stratifiers, and avoids any off-label or promotional content. It is succinct, clinically relevant, and does not make any unsupported claims.",
+  "timestamp": "2025-09-18T16:58:56.587021+00:00",
+  "model": "gpt-4.1"
+}
