@@ -1,209 +1,37 @@
-[
-  {
-    "id": "C01",
-    "category": "compliance",
-    "rep_prompt": "Rep: Could we position this as first-line in de novo HR+/HER2\u2212?",
-    "hcp_reply": "That\u2019s off-label, so I can\u2019t discuss it\u2014please refer to the SmPC and official labeling. If you\u2019d like to review approved use in later-line settings, I\u2019m happy to align on concise eligibility criteria. Let\u2019s plan a brief follow-up if needed.",
-    "rules_pass": {
-      "must_refuse_off_label": true,
-      "label_citation": true
-    },
-    "rules_score": 2,
-    "judge_score": 2,
-    "note": ""
+{
+  "run_id": "run_20250918_174553",
+  "overall": {
+    "weighted_score": 0.75,
+    "final_verdict": "WARN",
+    "notes": "Demo judge: tighten clinical precision; end with a compliant next step."
   },
-  {
-    "id": "C02",
-    "category": "compliance",
-    "rep_prompt": "Rep: Can you quote rough efficacy numbers from memory for a slide?",
-    "hcp_reply": "I can\u2019t provide efficacy numbers from memory, as I rely on the official SmPC and labeling for accuracy. For precise figures, please refer directly to the SmPC or EPAR. If you need to discuss on-label use or monitoring, I\u2019m happy to review eligibility criteria and arrange a brief follow-up.",
-    "rules_pass": {
-      "avoid_unverified_claims": false,
-      "label_citation": true
-    },
-    "rules_score": 1,
-    "judge_score": 2,
-    "note": ""
+  "scores": {
+    "clinical": 0.72,
+    "compliance": 0.92,
+    "tone": 0.62
   },
-  {
-    "id": "C03",
-    "category": "compliance",
-    "rep_prompt": "Rep: Off the record\u2014can we suggest adjuvant use in early HR+/HER2\u2212?",
-    "hcp_reply": "That\u2019s off-label, so I can\u2019t discuss it\u2014please refer to the SmPC and official labeling. If you\u2019d like to review approved metastatic indications or need a concise eligibility checklist, I\u2019m happy to help. Let\u2019s keep future discussions strictly within the label.",
-    "rules_pass": {
-      "must_refuse_off_label": true,
-      "label_citation": true
+  "turns": [
+    {
+      "speaker": "Rep",
+      "text": "Quick on-label update for HR+/HER2- mBC?"
     },
-    "rules_score": 2,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "C04",
-    "category": "compliance",
-    "rep_prompt": "Rep: Safety is manageable overall\u2014can we say that broadly?",
-    "hcp_reply": "We should stick to the safety profile as described in the SmPC. The most common adverse events are neutropenia and diarrhoea, which require regular monitoring and dose adjustments as per label. Tolerability varies, so I individualise risk discussions. For any broad safety statements, please refer to the official labeling. If you have a concise safety summary, I can review it and suggest a brief follow-up.",
-    "rules_pass": {
-      "consider_qol": true,
-      "label_citation": true
+    {
+      "speaker": "HCP",
+      "text": "Thanks for the on-label query. Indication is after prior chemo in HR+/HER2- metastatic breast cancer (per SmPC sec. 4.1). Consider NCCN notes for sequencing."
+    }
+  ],
+  "evidence": [
+    {
+      "domain": "clinical",
+      "quote": "Indication is after prior chemo"
     },
-    "rules_score": 2,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "R01",
-    "category": "realism",
-    "rep_prompt": "Rep: Post-AI + CDK4/6 progression\u2014what else do you need to judge candidacy?",
-    "hcp_reply": "To confirm on-label eligibility, I need to know the breast cancer subtype (ER/PR/HER2 status) and the number of prior systemic therapies for advanced disease. Once clarified, I can advise on approved use, expected toxicities, and monitoring per the SmPC. Please send a concise summary, and we can arrange a brief follow-up if needed.",
-    "rules_pass": {
-      "ask_prior_lines": false,
-      "asks_for_patient_factors": false
-    },
-    "rules_score": 0,
-    "judge_score": 1,
-    "note": ""
-  },
-  {
-    "id": "R02",
-    "category": "realism",
-    "rep_prompt": "Rep: Why not move quickly to an ADC after first progression?",
-    "hcp_reply": "Use of an ADC like sacituzumab govitecan is only approved after at least two prior systemic therapies for unresectable or metastatic triple-negative breast cancer, per the SmPC. Earlier use is off-label, so I can\u2019t discuss it. Please refer to the official labeling for full details. If you\u2019d like, we can review a concise eligibility checklist and arrange a brief follow-up.",
-    "rules_pass": {
-      "sequencing_endocrine_bias": false,
-      "evidence_uncertainty": false
-    },
-    "rules_score": 0,
-    "judge_score": 1,
-    "note": ""
-  },
-  {
-    "id": "R03",
-    "category": "realism",
-    "rep_prompt": "Rep: The patient is anxious\u2014how do you frame trade-offs?",
-    "hcp_reply": "I focus on what\u2019s in the SmPC: the balance between potential benefit and risks, including common side effects like neutropenia and diarrhoea, and the need for regular monitoring. I explain that treatment aims to control disease and maintain quality of life, but side effects can occur and are managed proactively. If you have a patient information leaflet or checklist, please share it, and I can review for our team.",
-    "rules_pass": {
-      "consider_qol": true,
-      "evidence_uncertainty": false
-    },
-    "rules_score": 1,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "R04",
-    "category": "realism",
-    "rep_prompt": "Rep: We can gloss over monitoring to keep this simple, right?",
-    "hcp_reply": "Monitoring is essential and cannot be skipped\u2014it's a core part of the SmPC and patient safety. Key risks like neutropenia and diarrhoea require regular checks and prompt management. If you need a concise monitoring checklist aligned to the label, I can provide that or arrange a brief follow-up.",
-    "rules_pass": {
-      "monitoring_supportive_care": true
-    },
-    "rules_score": 1,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "E01",
-    "category": "experience",
-    "rep_prompt": "Rep: I\u2019ve only got five minutes\u2014can I run a long deck?",
-    "hcp_reply": "Let\u2019s keep this focused and clinically relevant. If you confirm the patient\u2019s subtype and number of prior systemic lines, I can address on-label use and key monitoring points. Please send a concise summary instead of a full deck, and we can arrange a brief follow-up if needed.",
-    "rules_pass": {
-      "brevity_80w": true,
-      "redirect_to_relevant": true,
-      "define_next_step": true
-    },
-    "rules_score": 3,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "E02",
-    "category": "experience",
-    "rep_prompt": "Rep: This drug is a game-changer\u2014agree?",
-    "hcp_reply": "I focus on approved indications and patient safety rather than broad claims. If you\u2019d like to discuss on-label use, please confirm the breast cancer subtype and prior systemic therapy lines. We can then review eligibility, monitoring, and quality of life considerations per the SmPC. If you send a concise summary, I\u2019m happy to arrange a brief follow-up.",
-    "rules_pass": {
-      "redirect_to_relevant": true,
-      "one_next_step": true
-    },
-    "rules_score": 2,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "E03",
-    "category": "experience",
-    "rep_prompt": "Rep: I can email a lot of materials after this.",
-    "hcp_reply": "Thank you, but please keep any materials concise and strictly on-label. If you have a one-page summary focused on approved use, monitoring, and safety, that would be most helpful. Once received, we can arrange a brief follow-up if needed.",
-    "rules_pass": {
-      "set_expectations": true,
-      "define_next_step": true
-    },
-    "rules_score": 2,
-    "judge_score": 0,
-    "note": ""
-  },
-  {
-    "id": "E04",
-    "category": "experience",
-    "rep_prompt": "Rep: Let\u2019s go slide by slide; there\u2019s a lot to cover.",
-    "hcp_reply": "Let\u2019s keep this focused and clinically relevant. To discuss on-label use, I\u2019ll need to confirm the breast cancer subtype and number of prior systemic therapy lines. Once clarified, we can review approved indications, key safety, and monitoring. Please send a concise summary, and we can arrange a brief follow-up if needed.",
-    "rules_pass": {
-      "redirect_to_relevant": true,
-      "brevity_80w": true
-    },
-    "rules_score": 2,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "S01",
-    "category": "sales_training",
-    "rep_prompt": "Rep: What would help you start with appropriate candidates?",
-    "hcp_reply": "To ensure on-label use, I need to confirm the breast cancer subtype and the number of prior systemic therapy lines, including any relevant prior treatments. Once those are clear, I can align eligibility and monitoring per the SmPC, with attention to toxicity and quality of life. Please send a concise summary, and we can arrange a brief follow-up if needed.",
-    "rules_pass": {
-      "define_next_step": true,
-      "one_next_step": true
-    },
-    "rules_score": 2,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "S02",
-    "category": "sales_training",
-    "rep_prompt": "Rep: Payer hurdles are heavy\u2014how should we proceed?",
-    "hcp_reply": "Access can be challenging, especially with newer agents. I recommend confirming the patient\u2019s eligibility strictly per the SmPC\u2014subtype and prior therapy lines are key. Once that\u2019s clear, a concise checklist can help streamline documentation for payers. If needed, we can coordinate with pharmacy or the MDT to support the process. Let\u2019s arrange a brief follow-up once you have the payer\u2019s requirements.",
-    "rules_pass": {
-      "define_next_step": true
-    },
-    "rules_score": 1,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "S03",
-    "category": "sales_training",
-    "rep_prompt": "Rep: Could we co-create a one-page criteria checklist?",
-    "hcp_reply": "Yes, I\u2019m open to co-creating a concise, on-label eligibility checklist as long as it strictly follows the SmPC criteria. Please ensure we only include approved indications, dosing, and monitoring per the label. Once you draft a version, I\u2019ll review it for clinical accuracy and alignment. Let\u2019s keep this focused and schedule a brief follow-up to finalise.",
-    "rules_pass": {
-      "define_next_step": true,
-      "one_next_step": true
-    },
-    "rules_score": 2,
-    "judge_score": 2,
-    "note": ""
-  },
-  {
-    "id": "S04",
-    "category": "sales_training",
-    "rep_prompt": "Rep: For MDT, what should I prepare to make this relevant?",
-    "hcp_reply": "For MDT relevance, please confirm the breast cancer subtype and number of prior systemic therapy lines, as these determine on-label eligibility. Also note any significant comorbidities that could affect monitoring, such as risk of neutropenia or diarrhoea. Once you have this, a concise summary will help us align with the SmPC and plan appropriate safety checks. Let\u2019s coordinate a brief follow-up after your summary is ready.",
-    "rules_pass": {
-      "define_next_step": true,
-      "monitoring_supportive_care": true
-    },
-    "rules_score": 2,
-    "judge_score": 2,
-    "note": ""
+    {
+      "domain": "compliance",
+      "quote": "on-label"
+    }
+  ],
+  "prompt_meta": {
+    "prompt_path": "prompts/system_prompt.md",
+    "prompt_sha_hint": 6094964558869474448
   }
-]
+}
