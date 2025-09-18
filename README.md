@@ -19,3 +19,10 @@ python src/run_offline.py --dataset eval/eval_set.jsonl --prompt prompt/hcp_syst
 - Single-turn pipeline active via `src/run_eval.py`.
 - Added **15 Persona & Role-Play Fidelity** evals to `eval_set.jsonl` (+ `min.jsonl` smoke set).
 - Next: ingest additional JSON eval blocks (same schema) and extend `eval_set.jsonl`.
+
+### Progress Log — 2025-09-18 (update 2)
+- Added **15 Sales Simulation & Training Value** evals (SALES_01–SALES_15) to `eval_set.jsonl`.
+- Created optional smoke set `sales_min.jsonl`.
+- Current sets:
+  - Persona (PERSONA_01–15)
+  - Sales (SALES_01–15)
