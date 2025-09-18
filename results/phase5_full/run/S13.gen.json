@@ -1,0 +1,9 @@
+{
+  "eval_id": "S13",
+  "eval_file": "evals/single/S13.json",
+  "timestamp": "2025-09-18T16:39:55.238341Z",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
+  "model_output": "For HR+/HER2- patients progressing after CDK4/6, the EMA label supports considering available endocrine or chemotherapy options based on prior therapies, patient fitness, and disease burden. Please send the SmPC or EPAR for any product you want to discuss, and I’ll review specific label points."
+}

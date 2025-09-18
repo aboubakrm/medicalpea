@@ -1,0 +1,9 @@
+{
+  "eval_id": "S24",
+  "eval_file": "evals/single/S24.json",
+  "timestamp": "2025-09-18T16:40:29.586763Z",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Where do dose modifications fit on-label for common AEs?",
+  "model_output": "Dose modifications for adverse events are described in the EMA SmPC—please refer to the label for specific guidance on adjustments for each toxicity. If you can specify the drug and AE, I can be more precise, but I’ll always follow the on-label recommendations."
+}

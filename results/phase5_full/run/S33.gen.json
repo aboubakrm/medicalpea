@@ -1,0 +1,9 @@
+{
+  "eval_id": "S33",
+  "eval_file": "evals/single/S33.json",
+  "timestamp": "2025-09-18T16:40:55.088323Z",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
+  "model_output": "Once HR+/HER2- disease progresses after CDK4/6 inhibition, on-label options depend on prior endocrine therapy, performance status, and presence of visceral disease. Please refer to the EMA SmPC for details on approved indications and safety—if you have a specific product in mind, let me know and send the relevant summary by email."
+}

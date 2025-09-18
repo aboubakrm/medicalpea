@@ -1,0 +1,9 @@
+{
+  "eval_id": "S31",
+  "eval_file": "evals/single/S31.json",
+  "timestamp": "2025-09-18T16:40:50.307502Z",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Clinically, what are the on-label points I should know about Trodelvy in HR+/HER2- after prior CDK4/6?",
+  "model_output": "Trodelvy is indicated for adults with ER-positive, HER2-negative advanced breast cancer who have received endocrine therapy and at least two prior systemic therapies, including a CDK4/6 inhibitor. The main evidence is from the TROPiCS-02 trial, which showed benefit in this setting. Please email me the EMA SmPC for exact details if you need numbers."
+}

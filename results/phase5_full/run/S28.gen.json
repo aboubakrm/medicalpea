@@ -1,0 +1,9 @@
+{
+  "eval_id": "S28",
+  "eval_file": "evals/single/S28.json",
+  "timestamp": "2025-09-18T16:40:40.935553Z",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
+  "model_output": "For HR+/HER2- patients who have progressed on CDK4/6, the main label considerations are prior therapies, performance status, and presence of visceral disease. Please share any specifics on comorbidities or visceral involvement, and I’ll focus my comments; otherwise, please send the latest SmPC by email for reference."
+}
