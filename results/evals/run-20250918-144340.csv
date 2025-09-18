@@ -1,0 +1,4 @@
+eval_id,domain,model,status,output_path,eval_type,judge_tags
+PERSONA_01,Persona & Role-Play Fidelity,gpt-4.1,ok,results/evals/PERSONA_01.md,,
+PERSONA_02,Persona & Role-Play Fidelity,gpt-4.1,ok,results/evals/PERSONA_02.md,,
+PERSONA_03,Persona & Role-Play Fidelity,gpt-4.1,ok,results/evals/PERSONA_03.md,,

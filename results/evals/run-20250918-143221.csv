@@ -1,0 +1,4 @@
+eval_id,domain,model,status,output_path,eval_type,judge_tags
+SALES_01,Sales Simulation & Training Value,gpt-4.1,ok,results/evals/SALES_01.md,,
+SALES_02,Sales Simulation & Training Value,gpt-4.1,ok,results/evals/SALES_02.md,,
+SALES_03,Sales Simulation & Training Value,gpt-4.1,ok,results/evals/SALES_03.md,,
