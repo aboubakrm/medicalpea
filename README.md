@@ -68,7 +68,7 @@ open results/run_latest/latest/report/index.html
 open results/run_latest/latest/report/chat/index.html
 Manual run (equivalent):
 
-bash
+```bash
 python src/run_eval.py \
   --dataset eval/eval_set.jsonl \
   --hcp_prompt_path prompt/hcp_system_prompt.md \
@@ -77,15 +77,20 @@ python src/run_eval.py \
   --model gpt-4o \
   --judge_model gpt-4o \
   --temp 0.6
-## Quick smoke (10 cases):
 
-bash
+---
+
+## **Quick smoke (10 cases):**
+
+```bash
 head -n 10 eval/eval_set.jsonl > eval/eval_set_10.jsonl
 python src/run_eval.py --dataset eval/eval_set_10.jsonl --hcp_prompt_path prompt/hcp_system_prompt.md --judge_prompt_path prompt/judge_master.md --outdir results/run_latest --model gpt-4o --judge_model gpt-4o --temp 0.6
 open results/run_latest/latest/report/index.html
-## Outputs
-bash
 
+---
+
+## **Outputs**
+```bash
 results/run_latest/<TIMESTAMP>/
   gen/       SXX.gen.json
   judged/    SXX.judge.json          # {score, pass, findings, rationale}
@@ -94,36 +99,47 @@ results/run_latest/<TIMESTAMP>/
     summary.csv                      # eval_id, score, pass, chat
     chat/
       index.html, S01.html ...       # Sales Rep (right/top) • Dr Tawel (left)
-## Repo Structure
-bash
+
+---
+
+## **Repo Structure**
+```bash
 prompt/               hcp_system_prompt.md, judge_master.md
 eval/                 eval_set.jsonl  (50 cases)
 src/                  run_eval.py, report_batch.py, make_chat_pages.py
 run_eval.sh           one-command runner
 dependencies.txt      pinned runtime deps
-Notes & Lessons
-Tone realism: tightening guardrails + moderate temperature (0.6) improved human feel while staying compliant.
 
-Judge normalization: preserve judge score/pass when present; compute only if absent → stable pass rates/averages.
+---
 
-Reporting UX: main report links to chats; CSV includes a chat column; dedicated chat gallery for quick realism checks.
+## **Notes & Lessons**
+**Tone realism**: tightening guardrails + moderate temperature (0.6) improved human feel while staying compliant.
 
-Robustness: chat pages render for all generations (even when a judge file is missing).
+**Judge normalization**: preserve judge score/pass when present; compute only if absent → stable pass rates/averages.
 
-Operational note: to ensure an end-to-end, reproducible submission despite API access hurdles, pipeline runs were personally funded by the author.
+**Reporting UX**: main report links to chats; CSV includes a chat column; dedicated chat gallery for quick realism checks.
 
-## Troubleshooting
-401 / invalid key: ensure .env contains OPENAI_API_KEY and the venv is active.
+**Robustness**: chat pages render for all generations (even when a judge file is missing).
 
-Zeros in CSV: open one judged/SXX.judge.json—the runner preserves judge score/pass; if absent, computes from rubric.
+**Operational note**: to ensure an end-to-end, reproducible submission despite API access hurdles, pipeline runs were personally funded by the author.
 
-Chats not opening: rebuild with absolute links:
+---
 
-bash
+## **Troubleshooting**
+**401 / invalid key**: ensure .env contains OPENAI_API_KEY and the venv is active.
+
+**Zeros in CSV**: open one judged/SXX.judge.json—the runner preserves judge score/pass; if absent, computes from rubric.
+
+**Chats not opening**: rebuild with absolute links:
+
+```bash
 python src/make_chat_pages.py --base results/run_latest/latest
 python src/report_batch.py --judged_glob "results/run_latest/latest/judged/*.judge.json" --outdir "results/run_latest/latest/report"
-## Dependencies
+
+---
+
+## **Dependencies**
 Pinned in dependencies.txt (install with pip install -r dependencies.txt). For full reproducibility you can snapshot with:
 
-bash
+```bash
 pip freeze > requirements-lock.txt
