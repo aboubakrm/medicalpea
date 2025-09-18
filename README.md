@@ -67,6 +67,8 @@ echo 'OPENAI_API_KEY=sk-...' > .env
 open results/run_latest/latest/report/index.html
 open results/run_latest/latest/report/chat/index.html
 ```
+---
+
 ## Manual run (equivalent):
 
 python src/run_eval.py \
@@ -77,6 +79,8 @@ python src/run_eval.py \
   --model gpt-4o \
   --judge_model gpt-4o \
   --temp 0.6
+
+  ---
 
 ## Quick smoke test (10 cases)
 
@@ -91,9 +95,12 @@ python src/run_eval.py --dataset eval/eval_set_10.jsonl \
   --temp 0.6
 open results/run_latest/latest/report/index.html
 ```
+
+---
+
 ## Outputs
 
-results/run_latest/<TIMESTAMP>/
+```results/run_latest/<TIMESTAMP>/
   gen/      SXX.gen.json
   judged/   SXX.judge.json          # {score, pass, findings, rationale}
   report/
@@ -101,7 +108,10 @@ results/run_latest/<TIMESTAMP>/
     summary.csv                     # eval_id, score, pass, chat
     chat/
       index.html, S01.html ...      # Sales Rep (right/top) • Dr Tawel (left)
-````markdown
+````
+
+---
+
 ## Repo Structure
 
 ```text
