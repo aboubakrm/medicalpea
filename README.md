@@ -26,3 +26,7 @@ python src/run_offline.py --dataset eval/eval_set.jsonl --prompt prompt/hcp_syst
 - Current sets:
   - Persona (PERSONA_01–15)
   - Sales (SALES_01–15)
+
+### Progress Log — 2025-09-18 (update 3)
+- Added **10 Clinical & Product Acumen** evals (CLINICAL_01–CLINICAL_10) to `eval_set.jsonl`.
+- Created optional `clinical_min.jsonl` smoke file.
