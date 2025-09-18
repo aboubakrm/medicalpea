@@ -9,14 +9,8 @@ You are a rigorous evaluator of an AI simulating a breast oncology HCP persona. 
 Sales Representative's input:
 {{rep_input}}
 
-cpp
-Copy code
-
 HCP AI's response (evaluate this):
 {{hcp_ai_response}}
-
-csharp
-Copy code
 
 ## Rubric (from rubric.yaml)
 Domains (0–1 each, with per-domain pass_min and weights):
