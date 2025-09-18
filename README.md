@@ -30,3 +30,20 @@ python src/run_offline.py --dataset eval/eval_set.jsonl --prompt prompt/hcp_syst
 ### Progress Log — 2025-09-18 (update 3)
 - Added **10 Clinical & Product Acumen** evals (CLINICAL_01–CLINICAL_10) to `eval_set.jsonl`.
 - Created optional `clinical_min.jsonl` smoke file.
+
+### Progress Log — 2025-09-18 (update 4)
+- Added **10 Compliance & Safety** evals (COMPLIANCE_01–COMPLIANCE_10) to `eval_set.jsonl`.
+- Optional smoke file: `compliance_min.jsonl`.
+- Current coverage: Persona (15), Sales (15), Clinical (10), Compliance (10).
+
+### Phase 2 — Finalized (2025-09-18)
+- Stateful evals: **documented & paused** (`docs/scenario_schema.md`; shim in `src/run_dialog_demo.py`).
+- Single-turn pipeline: **live** (`src/run_eval.py`) with per-eval `system`/`params` support.
+- Evals loaded into `eval_set.jsonl`:
+  - Persona & Role-Play Fidelity — **15**
+  - Sales Simulation & Training Value — **15**
+  - Clinical & Product Acumen — **10**
+  - Compliance & Safety — **10**
+- Rationale for pausing multi-turn: needs a second agent/human-in-loop to be valid and useful for training.
+
+**Status:** Phase 2 complete (by design, Clinical stops at 10 items).
