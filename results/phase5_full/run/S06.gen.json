@@ -1,9 +1,0 @@
-{
-  "eval_id": "S06",
-  "eval_file": "evals/single/S06.json",
-  "timestamp": "2025-09-18T16:39:33.911685Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Clinically, what are the on-label points I should know about Trodelvy in HR+/HER2- after prior CDK4/6?",
-  "model_output": "Trodelvy (sacituzumab govitecan) is indicated for HR-positive, HER2-negative advanced breast cancer after endocrine therapy and at least two prior chemotherapies, including for metastatic disease. The label includes patients previously treated with CDK4/6 inhibitors. Please send the SmPC or EPAR by email for precise details."
-}

@@ -1,128 +1,145 @@
-#!/usr/bin/env python3
-import os, json, csv, pathlib, argparse, datetime
-from typing import List, Dict, Any
+import os, json, argparse, re, sys, subprocess
+from datetime import datetime, timezone
+from dotenv import load_dotenv
+load_dotenv()
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
 
-# Optional OpenAI SDK
-try:
-    from openai import OpenAI
-    HAS_OPENAI = True
-except Exception:
-    HAS_OPENAI = False
-
-DEF_INPUT = "eval_set.jsonl"
-DEF_OUTDIR = "results/evals"
-DEF_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1")
-DEF_SYSTEM = (
-    "You are an on-label, EU/EMA-constrained medical HCP persona. "
-    "Be brief, clinically useful, and avoid speculation."
-)
-
-def load_jsonl(path: str) -> List[Dict[str, Any]]:
-    rows: List[Dict[str, Any]] = []
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                rows.append(json.loads(line))
-    return rows
-
-def ensure_dir(p: str):
-    pathlib.Path(p).mkdir(parents=True, exist_ok=True)
-
-def build_messages(item: Dict[str, Any]) -> List[Dict[str, str]]:
-    # Per-eval system override
-    system_msg = item.get("system") or DEF_SYSTEM
-
-    # Optional context payload appended below the prompt
-    ctx = item.get("context") or {}
-    ctx_str = (json.dumps(ctx, ensure_ascii=False) if ctx else "")
-    user = item["prompt"] if not ctx_str else f"{item['prompt']}\n\n[context]\n{ctx_str}"
-
-    # Optional extra_instructions (go after system, before user)
-    extra = item.get("extra_instructions")
-    messages = [{"role":"system","content":system_msg}]
-    if extra:
-        messages.append({"role":"system","content":extra})
-    messages.append({"role":"user","content":user})
-    return messages
-
-def call_model(messages: List[Dict[str, str]], model: str, params: Dict[str, Any]) -> str:
-    if not HAS_OPENAI:
-        return "[DRY-RUN] OpenAI SDK not installed; skipping API call."
-    cli = OpenAI()
-    # Minimal safe overrides
-    temperature = float(params.get("temperature", 0.2))
-    max_tokens = int(params.get("max_tokens", 500))
-    resp = cli.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
-        seed=params.get("seed")
-    )
-    return resp.choices[0].message.content.strip()
+def read(p): return open(p,"r",encoding="utf-8").read()
+def ensure_dirs(*ps): [os.makedirs(x,exist_ok=True) for x in ps]
+def _escape_curly(t): return t.replace("{","{{").replace("}","}}")
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--input", default=DEF_INPUT)
-    ap.add_argument("--outdir", default=DEF_OUTDIR)
-    ap.add_argument("--model", default=DEF_MODEL)
-    ap.add_argument("--limit", type=int, default=0, help="0 = all")
-    args = ap.parse_args()
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--dataset", default="eval/eval_set.jsonl")
+    ap.add_argument("--hcp_prompt_path", default="prompt/hcp_system_prompt.md")
+    ap.add_argument("--judge_prompt_path", default="prompt/judge_master.md")
+    ap.add_argument("--outdir", default="results/run_latest")
+    ap.add_argument("--model", default="gpt-4o")
+    ap.add_argument("--judge_model", default="gpt-4o")
+    ap.add_argument("--temp", type=float, default=0.6)
+    args=ap.parse_args()
 
-    ensure_dir(args.outdir)
-    rows = load_jsonl(args.input)
-    if args.limit > 0:
-        rows = rows[:args.limit]
+    stamp=datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    base_out=os.path.join(args.outdir, stamp)
+    gen_dir=os.path.join(base_out,"gen"); judged_dir=os.path.join(base_out,"judged"); report_dir=os.path.join(base_out,"report")
+    ensure_dirs(gen_dir, judged_dir, report_dir)
 
-    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    csv_path = os.path.join(args.outdir, f"run-{stamp}.csv")
-    with open(csv_path, "w", newline="", encoding="utf-8") as cf:
-        w = csv.writer(cf)
-        w.writerow([
-            "eval_id","domain","model","status","output_path",
-            "eval_type","judge_tags"
-        ])
-        for i, item in enumerate(rows, 1):
-            eval_id = item.get("eval_id", f"row_{i:04d}")
-            model = item.get("model") or args.model
-            params = item.get("params") or {}
+    # HCP chain
+    hcp_prompt=ChatPromptTemplate.from_messages([
+        ("system", _escape_curly(read(args.hcp_prompt_path))),
+        ("user", "{user_input}")
+    ])
+    hcp_llm=ChatOpenAI(model=args.model, temperature=args.temp)
+    hcp_chain=hcp_prompt|hcp_llm
 
-            messages = build_messages(item)
-            out_text = call_model(messages, model, params)
+    # Judge chain
+    judge_prompt=ChatPromptTemplate.from_messages([
+        ("system", _escape_curly(read(args.judge_prompt_path))),
+        ("user",
+         "You are the compliance & clinical quality judge. "
+         "Return STRICT JSON with keys: eval_id (string), score (0-100 int), pass (bool), "
+         "findings (array of strings), rationale (string). No extra text."),
+        ("user", "{case_block}")
+    ])
+    judge_llm=ChatOpenAI(model=args.judge_model, temperature=0.0)
+    judge_chain=judge_prompt|judge_llm
 
-            md_path = os.path.join(args.outdir, f"{eval_id}.md")
-            with open(md_path, "w", encoding="utf-8") as mf:
-                mf.write(f"# {eval_id} — {item.get('domain','')}\n\n")
-                mf.write("## Prompt\n\n")
-                mf.write(item["prompt"] + "\n\n")
-                if item.get("system"):
-                    mf.write("## System (override)\n\n")
-                    mf.write(item["system"] + "\n\n")
-                if item.get("extra_instructions"):
-                    mf.write("## Extra Instructions\n\n")
-                    mf.write(item["extra_instructions"] + "\n\n")
-                if item.get("context"):
-                    mf.write("## Context\n\n")
-                    mf.write("```json\n" + json.dumps(item["context"], indent=2, ensure_ascii=False) + "\n```\n\n")
-                if item.get("judge"):
-                    mf.write("## Judge (metadata)\n\n")
-                    mf.write("```json\n" + json.dumps(item["judge"], indent=2, ensure_ascii=False) + "\n```\n\n")
-                mf.write("## Model Output\n\n")
-                mf.write(out_text + "\n")
+    judged=[]
+    with open(args.dataset,"r",encoding="utf-8") as f:
+        for i,line in enumerate(f,1):
+            ex=json.loads(line); eid=ex["eval_id"]; print(f"[{i}] {eid}", flush=True)
 
-            w.writerow([
-                eval_id,
-                item.get("domain",""),
-                model,
-                "ok",
-                md_path,
-                (item.get("eval_type") or ""),
-                ",".join(item.get("judge_tags", []))
-            ])
-            print(f"[{i}/{len(rows)}] {eval_id} -> {md_path}")
+            # Generate
+            user_input=ex.get("prompt","")
+            gen_text=hcp_chain.invoke({"user_input": user_input}).content
+            json.dump({
+                "eval_id":eid,"timestamp":datetime.now(timezone.utc).isoformat(),
+                "model":args.model,"temperature":args.temp,
+                "rep_input":user_input,"model_output":gen_text
+            }, open(os.path.join(gen_dir,f"{eid}.gen.json"),"w",encoding="utf-8"), ensure_ascii=False, indent=2)
 
-    print(f"\nSummary: {csv_path}")
+            # Judge
+            case_block=json.dumps({
+                "eval_id":eid,"category":ex.get("category",""),
+                "rep_input":user_input,"model_output":gen_text,
+                "evaluation_criteria":ex.get("criteria",[])
+            }, ensure_ascii=False)
+            jraw=judge_chain.invoke({"case_block": case_block}).content
+            try:
+                j=json.loads(jraw)
+            except Exception:
+                m=re.search(r"\{[\s\S]*\}",jraw)
+                j=json.loads(m.group(0)) if m else {
+                    "eval_id":eid,
+                    "findings":["Judge JSON parse failed"],
+                    "rationale": jraw[:500]
+                }
 
-if __name__ == "__main__":
-    main()
+            # --- normalize (respect existing judge-provided score/pass if present) ---
+            judge_score = j.get("score")
+            try:
+                judge_score = int(judge_score) if judge_score is not None else None
+            except Exception:
+                judge_score = None
+            judge_pass = j.get("pass")
+            judge_pass = bool(judge_pass) if judge_pass is not None else None
+
+            score = judge_score if (isinstance(judge_score,int) and judge_score>=0) else 0
+            ow=(j.get("overall") or {}).get("weighted_score")
+            if not score and isinstance(ow,(int,float)):
+                score = int(round(ow*100)) if ow<=1.0 else int(round(ow))
+            if not score and isinstance(j.get("scores"),dict):
+                vals=[v for v in j["scores"].values() if isinstance(v,(int,float))]
+                if vals:
+                    mx=max(vals); avg=sum(vals)/len(vals)
+                    score = int(round(avg*100)) if mx<=1.0 else int(round(avg))
+
+            verdict=(j.get("overall") or {}).get("final_verdict","")
+            verdict = verdict.strip().lower() if isinstance(verdict,str) else ""
+            passed = judge_pass if judge_pass is not None else (verdict.startswith("pass") if verdict else (score>=80))
+
+            findings = j.get("findings") or []
+            if not findings and isinstance(j.get("evidence"),list):
+                findings=[f"{e.get('domain','?')}: {str(e.get('quote','')).strip()[:180]}" for e in j["evidence"][:3]]
+            rationale = (j.get("rationale") or j.get("notes","") or "").strip()
+
+            j.update({
+                "eval_id":eid,
+                "score": max(0, min(100, int(score))),
+                "pass": bool(passed),
+                "findings": findings,
+                "rationale": rationale,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "model": args.judge_model
+            })
+            json.dump(j, open(os.path.join(judged_dir,f"{eid}.judge.json"),"w",encoding="utf-8"), ensure_ascii=False, indent=2)
+            judged.append(j)
+
+    # CSV with chat links
+    with open(os.path.join(report_dir,"summary.csv"),"w",encoding="utf-8") as w:
+        w.write("eval_id,score,pass,chat\n")
+        for x in judged:
+            w.write(f"{x['eval_id']},{int(x.get('score',0))},{bool(x.get('pass',False))},chat/{x['eval_id']}.html\n")
+
+    # HTML report
+    subprocess.run([sys.executable,"src/report_batch.py","--judged_glob",os.path.join(judged_dir,"*.judge.json"),"--outdir",report_dir], check=True)
+
+    # Chat pages (split theme/layout + labels; SR right/top, Dr left/below)
+    subprocess.run([sys.executable,"src/make_chat_pages.py","--base",base_out,"--theme","split","--layout","split","--user_label","Sales Representative","--assistant_label","Dr Tawel"], check=False)
+
+    # latest symlink
+    latest=os.path.join(args.outdir,"latest")
+    try:
+        if os.path.islink(latest) or os.path.exists(latest): os.unlink(latest)
+        os.symlink(os.path.abspath(base_out), latest)
+    except Exception as e:
+        print(f"(Note) latest symlink not updated: {e}")
+
+    print("\nOutputs:")
+    print("  base:", base_out)
+    print("  html:", os.path.join(report_dir,"index.html"))
+    print("  chat:", os.path.join(report_dir,"chat","index.html"))
+    print("  csv :", os.path.join(report_dir,"summary.csv"))
+
+if __name__=="__main__": main()

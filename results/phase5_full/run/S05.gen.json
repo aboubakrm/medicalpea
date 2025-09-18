@@ -1,9 +1,0 @@
-{
-  "eval_id": "S05",
-  "eval_file": "evals/single/S05.json",
-  "timestamp": "2025-09-18T16:39:29.908773Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Which stratifiers do you need before answering further on-label?",
-  "model_output": "For on-label advice, I need to know ER, PR, and HER2 status, prior lines of treatment (especially CDK4/6 exposure), performance status, and whether there is visceral crisis or significant comorbidity. Please share these minimal details so I can comment appropriately."
-}

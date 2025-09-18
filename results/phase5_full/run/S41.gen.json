@@ -1,9 +1,0 @@
-{
-  "eval_id": "S41",
-  "eval_file": "evals/single/S41.json",
-  "timestamp": "2025-09-18T16:54:51.426062Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Clinically, what are the on-label points I should know about Trodelvy in HR+/HER2- after prior CDK4/6?",
-  "model_output": "For HR-positive, HER2-negative advanced breast cancer after prior endocrine therapy and CDK4/6 inhibitor, Trodelvy is indicated as monotherapy based on the TROPiCS-02 study. Please refer to the EMA SmPC for specifics on patient selection, dosing, and safety—email me the label if you want to highlight a particular point."
-}

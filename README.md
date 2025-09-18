@@ -1,277 +1,129 @@
-# medicalpea — HCP Simulation Eval (CTC Health)
+# Pharma Sales Call Simulation (HCP Persona)
 
-## What this repo contains
-- **Persona prompt**: `prompt/hcp_system_prompt.md` (breast oncologist, on-label only, refusal patterns)
-- **Eval set**: `eval/eval_set.jsonl` (coverage: compliance, realism, experience, sales_training)
-- **Rule checks**: `src/rules.py` (regex-based)
-- **Runners**
-  - `src/run_offline.py` → offline, no API; always writes results
-  - `src/run_eval.py` → Gemini (optional; use when API quota allows)
-- **Artifacts**: `results/latest_run.json` & `results/latest_run.csv`
+Prototype conversational AI that simulates a breast cancer oncologist (**Dr. Ahmed Tawel**) for pharma sales training. The rep details **Trodelvy** in **EMA** context. The HCP is realistic, concise, and **strictly on-label**. The repo includes a one-command evaluation run, an HTML report, and chat-style previews for fast realism checks.
 
-## Quick start (offline — no API required)
-```bash
-python src/run_offline.py --dataset eval/eval_set.jsonl --prompt prompt/hcp_system_prompt.md
-
-
-### Progress Log — 2025-09-18
-- Pivot confirmed: **Stateful evals paused**, documented in `docs/scenario_schema.md`.
-- Single-turn pipeline active via `src/run_eval.py`.
-- Added **15 Persona & Role-Play Fidelity** evals to `eval_set.jsonl` (+ `min.jsonl` smoke set).
-- Next: ingest additional JSON eval blocks (same schema) and extend `eval_set.jsonl`.
-
-### Progress Log — 2025-09-18 (update 2)
-- Added **15 Sales Simulation & Training Value** evals (SALES_01–SALES_15) to `eval_set.jsonl`.
-- Created optional smoke set `sales_min.jsonl`.
-- Current sets:
-  - Persona (PERSONA_01–15)
-  - Sales (SALES_01–15)
-
-### Progress Log — 2025-09-18 (update 3)
-- Added **10 Clinical & Product Acumen** evals (CLINICAL_01–CLINICAL_10) to `eval_set.jsonl`.
-- Created optional `clinical_min.jsonl` smoke file.
-
-### Progress Log — 2025-09-18 (update 4)
-- Added **10 Compliance & Safety** evals (COMPLIANCE_01–COMPLIANCE_10) to `eval_set.jsonl`.
-- Optional smoke file: `compliance_min.jsonl`.
-- Current coverage: Persona (15), Sales (15), Clinical (10), Compliance (10).
-
-### Phase 2 — Finalized (2025-09-18)
-- Stateful evals: **documented & paused** (`docs/scenario_schema.md`; shim in `src/run_dialog_demo.py`).
-- Single-turn pipeline: **live** (`src/run_eval.py`) with per-eval `system`/`params` support.
-- Evals loaded into `eval_set.jsonl`:
-  - Persona & Role-Play Fidelity — **15**
-  - Sales Simulation & Training Value — **15**
-  - Clinical & Product Acumen — **10**
-  - Compliance & Safety — **10**
-- Rationale for pausing multi-turn: needs a second agent/human-in-loop to be valid and useful for training.
-
-**Status:** Phase 2 complete (by design, Clinical stops at 10 items).
-## Phase 3: Centralized, Deterministic, and Auditable Judging
-
-### Overview
-Phase 3 introduces a robust and auditable evaluation pipeline for the HCP AI. This update centralizes all rubric logic into a single, deterministic system. Key improvements include a strict JSON contract for outputs, deterministic guardrails, and fully reproducible results via **per-run folders** and a **global cache**.
-
-- **Per-run outputs:** `results/runs/<RUN_ID>/…`
-- **Latest pointer:** `results/latest` (symlink or `results/latest_run.txt`)
+## Table of Contents
+- [Model Choice — GPT-4o](#model-choice--gpt-4o)
+- [Prompt Architecture](#prompt-architecture)
+- [Evaluation Approach](#evaluation-approach)
+- [Scope Choice: Single-Turn vs Multi-Turn](#scope-choice-single-turn-vs-multi-turn)
+- [Run Locally](#run-locally)
+- [Outputs](#outputs)
+- [Repo Structure](#repo-structure)
+- [Notes & Lessons](#notes--lessons)
+- [Troubleshooting](#troubleshooting)
+- [Dependencies](#dependencies)
 
 ---
 
-### Core Components
-| File | Description |
-| :--- | :--- |
-| `rubric.yaml` | Defines the core evaluation criteria (weights, thresholds, fail-fast). |
-| `prompts/judge_master.md` | The master prompt template for the LLM judge (schema-enforced, CoT-safe). |
-| `src/judge.py` | Orchestrator: rules pre-checks, prompt render, LLM call, evidence repair, scoring, flags. |
-| `src/rules.py` | Deterministic regex guardrails (e.g., blatant off-label/pro-mo). |
-| `schemas/verdict.schema.json` | JSON schema that all judge outputs must satisfy. |
-| `src/run_judge.py` | Runner that loads `.env`, calls the judge with fixed seed. |
-| `tools/` | QA utilities (`check_compliance.py`, `run_k_times.sh`). |
+## Model Choice — GPT-4o
+
+- **Clinical reasoning & instruction following:** GPT-4-class models handle nuanced clinical scenarios under strict guardrails—ideal for an HCP persona that must stay on-label.
+- **Natural dialogue:** `gpt-4o` produces human, non-robotic turns (key for sales-call realism).
+- **Track record:** Public leaderboards (e.g., Hugging Face) and community evaluations consistently show strong GPT-4-class performance on medical/professional-exam style tasks (e.g., USMLE-style QA).
+- **Judging:** `gpt-4o` is also used as the judge (optionally `gpt-4o-mini` for lower cost).
 
 ---
 
-### How to Run the Judge
+## Prompt Architecture
 
-**Default run** — timestamped folder + global cache:
-```bash
-python -m src.run_judge
-```
+`prompt/hcp_system_prompt.md` encodes:
+- **Role & tone:** busy, courteous, cautious oncologist (HR+/HER2− focus).
+- **Guardrails (if–then):** on-label behavior; safety language; defer to SmPC; no promotional claims.
+- **Conversational moves:** clarify clinical context; address succinctly; close cleanly.
+- **Tiny examples:** “good vs don’t” style cues.
+- **Final reminder:** brevity, plain language, on-label only.
 
-**Named run** — helpful for CI:
-```bash
-RUN_ID=ci-1234 python -m src.run_judge
-```
+---
 
-**Force re-evaluation** — bypass cache and rejudge all:
-```bash
-FORCE=1 python -m src.run_judge
-```
+## Evaluation Approach
 
-Outputs are stored under `results/runs/<RUN_ID>/`, with a convenience pointer at `results/latest`.
+We use a **Generator/Judge** pattern over 50 single-turn prompts (`eval/eval_set.jsonl`):
 
-### Determinism and Caching
+- **Generator:** `gpt-4o` + HCP prompt produces the answer.
+- **Judge:** `gpt-4o` scores five domains:
+  - `on_label_compliance`, `clinical_usefulness`, `brevity_tone`, `naturalness`, `safety_integrity`
+- Outputs are normalized to `{score, pass, findings, rationale}` and reported.
 
-To ensure consistent, reproducible outputs:
+---
 
-- **Model settings:** OpenAI Responses API with `temperature=0`, `top_p=1`, and fixed `seed` (set via `.env`: `OPENAI_JUDGE_SEED`).
-- **Global cache:** `results/cache/judgements/` avoids repeated LLM calls for the same inputs.
+## Scope Choice: Single-Turn vs Multi-Turn
 
-**Bypass cache for a run:**
-```bash
-JUDGE_DISABLE_CACHE=1 python -m src.run_judge
-# or
-FORCE=1 python -m src.run_judge
-```
+- Multi-turn prototypes were explored, but intentionally **scoped to single-turn** for the submission. Multi-turn flows risk mismatch between a scripted/model rep side and the HCP (state drift, tone drift, timing issues).
+- Using an LLM for the **rep side** would **confound evaluation** (you end up judging a *pair of models*).
+- Single-turn evals + chat-style previews keep the experience realistic **and** the scoring objective and reproducible. The codebase can be extended to multi-turn later if needed.
 
-**Determinism check** — identical outputs across repeated runs:
-```bash
-tools/run_k_times.sh 3
-```
+---
 
-If all hashes match you’ll see: `ALL MATCH ✅`.
-
-### Handling of Duplicate Entries
-
-If `eval_set.jsonl` contains duplicate `eval_id`s, the judge skips duplicates to prevent accidental overwrites and extra cost.
-
-To re-judge a specific ID, delete its verdict JSON in the run folder, or run with `FORCE=1`.
-
-### Compliance Judging Enhancements
-
-**The Issue**
-Some compliant HCP replies that explicitly stated “stay within label” were under-scored or flagged `OFF_LABEL` because the rep’s question mentioned an off-label scenario.
-
-**The Solution (two layers):**
-
-1.  **Prompt refinement (`prompts/judge_master.md`):**
-    - Only flag off-label if the HCP response *itself* endorses off-label use. Do not penalize the HCP for the rep’s question.
-
-2.  **Post-processing safeguards (`src/judge.py`):**
-    - **Post-filter:** Removes `OFF_LABEL_SUGGESTION` only when the HCP explicitly declines off-label (e.g., “stay within label”, “on-label only”).
-    - **On-label uplift:** Sets `on_label_compliance = 1.0` only if the HCP clearly states on-label boundaries and there are no off-label flags.
-
-These safeguards can be disabled for A/B testing:```bash
-JUDGE_DISABLE_POSTFILTER=1   # disable OFF_LABEL post-filter
-JUDGE_DISABLE_UPLIFT=1       # disable on-label uplift
-```
-
-**Verification (to ensure we’re not “papering over” violations):**
-
-- **A/B tests**
-  - `C001` (compliant): Raw judge → false negative; Production judge → Pass with `on_label_compliance=1.0`.
-  - `X001` (off-label): Raw judge → Fail with `OFF_LABEL_SUGGESTION`; Production judge → Fail (unchanged).
-- **Compliance sweep**
-  - `python tools/check_compliance.py` reported `CORRECT` for both probes (no false positives/negatives).
-- **Safety**
-  - Uplift never triggers if any off-label flags exist; the post-filter only acts when the HCP explicitly refuses off-label. Regex rules in `src/rules.py` still fail-fast true off-label content.
-
-### Evidence Tracking
-
-Each verdict includes evidence spans in the form:
-```json
-{ "domain": "<key>", "start": <int>, "end": <int>, "quote": "<text>" }
-```
-
-Offsets are character indices into the HCP response. Minor quote/whitespace mismatches are auto-corrected.
-
-### Environment Configuration
-
-Create a `.env` file:
-```
-OPENAI_API_KEY=sk-...
-OPENAI_JUDGE_MODEL=gpt-4.1
-OPENAI_JUDGE_SEED=42
-```
-
-## Phase 4 — HTML Conversation Visualizer
-
-This phase adds a small pipeline for running an eval, saving a JSON artifact, and generating a polished HTML report.
-
-### Files
-- `tools/report.py` — generates `results/report_<run_id>.html` from a run JSON.
-- `tools/run_and_report.py` — glue CLI to run HCP agent + judge, write JSON, and call the report.
-- `prompts/system_prompt.md` — editable system prompt for the HCP agent.
-
-### Quick start
-```bash
-python tools/run_and_report.py \
-  --prompt prompts/system_prompt.md \
-  --rep-text "Quick on-label update for HR+/HER2- mBC?"
-open "$(ls -t results/report_*.html | head -n1)"
-```
-
-### Plug in your real HCP agent & judge (no code edits)
-
-Use dynamic imports (replace with your entrypoints). If needed: `export PYTHONPATH="$(pwd):$PYTHONPATH"`.
+## Run Locally
 
 ```bash
-python tools/run_and_report.py \
-  --hcp medicalpea.agents:hcp_generate \
-  --judge medicalpea.judge:evaluate \
-  --prompt prompts/system_prompt.md \
-  --rep-text "Quick on-label update for HR+/HER2- mBC?"
-open "$(ls -t results/report_*.html | head -n1)"```
+python -m venv .venv && source .venv/bin/activate
+pip install -r dependencies.txt
+echo 'OPENAI_API_KEY=sk-...' > .env
 
-Expected signatures:
+./run_eval.sh
 
-* `hcp_generate(system_prompt: str, user_input: str) -> str`
-* `evaluate(turns: list[dict]) -> dict` (see schema below)
+open results/run_latest/latest/report/index.html
+open results/run_latest/latest/report/chat/index.html
+Manual run (equivalent):
 
-Prefer hard-coded imports? Edit the “EDIT SECTION A/B” blocks in `tools/run_and_report.py`.
+bash
+python src/run_eval.py \
+  --dataset eval/eval_set.jsonl \
+  --hcp_prompt_path prompt/hcp_system_prompt.md \
+  --judge_prompt_path prompt/judge_master.md \
+  --outdir results/run_latest \
+  --model gpt-4o \
+  --judge_model gpt-4o \
+  --temp 0.6
+## Quick smoke (10 cases):
 
-### JSON schema (what the report expects)
+bash
+head -n 10 eval/eval_set.jsonl > eval/eval_set_10.jsonl
+python src/run_eval.py --dataset eval/eval_set_10.jsonl --hcp_prompt_path prompt/hcp_system_prompt.md --judge_prompt_path prompt/judge_master.md --outdir results/run_latest --model gpt-4o --judge_model gpt-4o --temp 0.6
+open results/run_latest/latest/report/index.html
+## Outputs
+bash
 
-The visualizer is tolerant, but this is the “happy path”:
+results/run_latest/<TIMESTAMP>/
+  gen/       SXX.gen.json
+  judged/    SXX.judge.json          # {score, pass, findings, rationale}
+  report/
+    index.html                       # clickable Eval IDs → chat page
+    summary.csv                      # eval_id, score, pass, chat
+    chat/
+      index.html, S01.html ...       # Sales Rep (right/top) • Dr Tawel (left)
+## Repo Structure
+bash
+prompt/               hcp_system_prompt.md, judge_master.md
+eval/                 eval_set.jsonl  (50 cases)
+src/                  run_eval.py, report_batch.py, make_chat_pages.py
+run_eval.sh           one-command runner
+dependencies.txt      pinned runtime deps
+Notes & Lessons
+Tone realism: tightening guardrails + moderate temperature (0.6) improved human feel while staying compliant.
 
-```json
-{
-  "run_id": "run_2025-09-18_15-42-10",
-  "overall": { "weighted_score": 0.86, "final_verdict": "PASS", "notes": "optional" },
-  "scores":  { "clinical": 0.71, "compliance": 0.92, "tone": 0.58 },
-  "turns": [
-    { "speaker": "Rep", "text": "Rep message 1" },
-    { "speaker": "HCP", "text": "HCP reply 1" }
-  ],
-  "evidence": [
-    { "domain": "clinical",   "quote": "Indication is after prior chemo" },
-    { "domain": "compliance", "quote": "on-label" }
-  ],
-  "notes": "Top-level coaching notes (optional)"
-}
-```
+Judge normalization: preserve judge score/pass when present; compute only if absent → stable pass rates/averages.
 
-**Evidence→turn tagging:** each `evidence[].quote` is matched as a substring in a turn’s `text`; matching turns display colored domain chips.
+Reporting UX: main report links to chats; CSV includes a chat column; dedicated chat gallery for quick realism checks.
 
-### Typical workflow
+Robustness: chat pages render for all generations (even when a judge file is missing).
 
-1. **Edit** `prompts/system_prompt.md`.
-2. **Run** the pipeline (with your agent/judge or demo hooks):
-   ```bash
-   python tools/run_and_report.py --hcp medicalpea.agents:hcp_generate --judge medicalpea.judge:evaluate --prompt prompts/system_prompt.md --rep-text "..."
-   ```
-3. **Open** the HTML report and review conversation, scores, tags, and notes.
-4. **Tweak** the system prompt; re-run.
+Operational note: to ensure an end-to-end, reproducible submission despite API access hurdles, pipeline runs were personally funded by the author.
 
-### CLI reference
-```bash
-python tools/run_and_report.py [--prompt PATH] [--rep-text TEXT] \
-  [--hcp module:function] [--judge module:function] \
-  [--run-id ID] [--out-json PATH] [--report PATH]
-```
+## Troubleshooting
+401 / invalid key: ensure .env contains OPENAI_API_KEY and the venv is active.
 
-* `--prompt` path to system prompt markdown (default `prompts/system_prompt.md`)
-* `--rep-text` one-shot Rep message
-* `--hcp` dynamic import for HCP agent (e.g., `package.module:function`)
-* `--judge` dynamic import for judge/eval
-* `--out-json` where to write the artifact (default `results/latest_run.json`)
-* `--report` path to report script (default `tools/report.py`)
+Zeros in CSV: open one judged/SXX.judge.json—the runner preserves judge score/pass; if absent, computes from rubric.
 
-### Render an existing JSON directly
+Chats not opening: rebuild with absolute links:
 
-If your eval already writes the JSON:
-```bash
-python tools/report.py results/latest_run.json
-open results/report_<run_id>.html
-```
+bash
+python src/make_chat_pages.py --base results/run_latest/latest
+python src/report_batch.py --judged_glob "results/run_latest/latest/judged/*.judge.json" --outdir "results/run_latest/latest/report"
+## Dependencies
+Pinned in dependencies.txt (install with pip install -r dependencies.txt). For full reproducibility you can snapshot with:
 
-### Troubleshooting
-
-* **ImportError on `--hcp` / `--judge`** → add your repo to PYTHONPATH:
-  ```bash
-  export PYTHONPATH="$(pwd):$PYTHONPATH"
-  ```
-* **No domain bars / tags** → ensure `scores` has numeric values and `evidence[].quote` appears literally in a turn’s `text`.
-* **Empty conversation** → `turns` must be a list of `{speaker, text}`.
-
-### Make it one command (optional)
-```make
-# Makefile
-run:
-	python tools/run_and_report.py --prompt prompts/system_prompt.md --rep-text "Quick on-label update for HR+/HER2- mBC?"
-	open $$(ls -t results/report_*.html | head -n1)
-```
-
-Run with:
-```bash
-make run
-```
+bash
+pip freeze > requirements-lock.txt
