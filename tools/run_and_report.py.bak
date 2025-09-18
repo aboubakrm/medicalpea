@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""
+Pipeline runner:
+- loads system prompt
+- runs HCP agent and judge hooks (replace with your real code)
+- writes results/latest_run.json
+- calls tools/report.py to render HTML
+"""
+import argparse, json, sys, subprocess, time
+from pathlib import Path
+
+# ---------------- Hooks (REPLACE with your integrations) ----------------
+def run_hcp_agent(system_prompt: str, rep_input: str) -> str:
+    """
+    TODO: Replace this with your actual HCP agent call.
+    Must return the HCP reply text (string).
+    """
+    # DEMO fallback:
+    return ("Thanks for the on-label query. Indication is after prior chemo in "
+            "HR+/HER2- metastatic breast cancer (per SmPC sec. 4.1). "
+            "Consider NCCN notes for sequencing.")
+
+def run_judge(turns: list) -> dict:
+    """
+    TODO: Replace with your eval/judge. Must return a dict like:
+      {
+        "overall": {"weighted_score": 0.86, "final_verdict": "PASS", "notes": "..."},
+        "scores": {"clinical": 0.71, "compliance": 0.92, "tone": 0.58},
+        "evidence": [{"domain":"clinical","quote":"Indication is after prior chemo"}]
+      }
+    """
+    # DEMO fallback: simple scoring heuristic
+    hcp_texts = [t["text"] for t in turns if t["speaker"].lower() == "hcp"]
+    hcp_all = " ".join(hcp_texts)
+    clinical = 0.72 if "Indication is after prior chemo" in hcp_all else 0.55
+    compliance = 0.92 if "on-label" in hcp_all.lower() or "on-label" in hcp_all.lower() else 0.6
+    tone = 0.62
+    overall = round((clinical + compliance + tone) / 3, 2)
+    return {
+        "overall": {"weighted_score": overall, "final_verdict": "PASS" if overall >= 0.8 else "WARN" if overall >= 0.6 else "FAIL",
+                    "notes": "Demo judge: tighten clinical precision; end with a compliant next step."},
+        "scores": {"clinical": clinical, "compliance": compliance, "tone": tone},
+        "evidence": [
+            {"domain": "clinical", "quote": "Indication is after prior chemo"},
+            {"domain": "compliance", "quote": "on-label"}
+        ]
+    }
+# ------------------------------------------------------------------------
+
+def main():
+    ap = argparse.ArgumentParser(description="Run eval + build HTML report.")
+    ap.add_argument("--prompt", default="prompts/system_prompt.md", help="Path to system prompt file")
+    ap.add_argument("--rep-text", default="Hi doctor—may I quickly share an on-label update?",
+                    help="Rep input text (single message for quick runs)")
+    ap.add_argument("--run-id", default=None, help="Optional run_id (auto if omitted)")
+    ap.add_argument("--out-json", default="results/latest_run.json", help="Where to write run JSON")
+    ap.add_argument("--report", default="tools/report.py", help="Path to the HTML report generator")
+    args = ap.parse_args()
+
+    prompt_path = Path(args.prompt)
+    if not prompt_path.exists():
+        print(f"[error] Prompt not found: {prompt_path}", file=sys.stderr); sys.exit(1)
+    system_prompt = prompt_path.read_text(encoding="utf-8")
+
+    run_id = args.run_id or time.strftime("run_%Y%m%d_%H%M%S")
+
+    # Build conversation
+    turns = [
+        {"speaker": "Rep", "text": args.rep_text},
+    ]
+    hcp_reply = run_hcp_agent(system_prompt, args.rep_text)
+    turns.append({"speaker": "HCP", "text": hcp_reply})
+
+    # Judge/eval
+    judge_out = run_judge(turns)
+
+    latest_run = {
+        "run_id": run_id,
+        "overall": {
+            "weighted_score": judge_out["overall"]["weighted_score"],
+            "final_verdict":  judge_out["overall"]["final_verdict"],
+            "notes":          judge_out["overall"].get("notes")
+        },
+        "scores":   judge_out.get("scores", {}),
+        "turns":    turns,
+        "evidence": judge_out.get("evidence", []),
+        "prompt_meta": {
+            "prompt_path": str(prompt_path),
+            "prompt_sha_hint": hash(system_prompt)  # not a real SHA, just a change hint
+        }
+    }
+
+    out_json = Path(args.out_json)
+    out_json.parent.mkdir(parents=True, exist_ok=True)
+    out_json.write_text(json.dumps(latest_run, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"Wrote {out_json}")
+
+    # Render HTML
+    try:
+        subprocess.run([sys.executable, args.report, str(out_json)], check=True)
+    except subprocess.CalledProcessError as e:
+        print("[error] report.py failed", e, file=sys.stderr); sys.exit(e.returncode)
+
+if __name__ == "__main__":
+    main()

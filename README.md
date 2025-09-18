@@ -162,3 +162,116 @@ OPENAI_API_KEY=sk-...
 OPENAI_JUDGE_MODEL=gpt-4.1
 OPENAI_JUDGE_SEED=42
 ```
+
+## Phase 4 — HTML Conversation Visualizer
+
+This phase adds a small pipeline for running an eval, saving a JSON artifact, and generating a polished HTML report.
+
+### Files
+- `tools/report.py` — generates `results/report_<run_id>.html` from a run JSON.
+- `tools/run_and_report.py` — glue CLI to run HCP agent + judge, write JSON, and call the report.
+- `prompts/system_prompt.md` — editable system prompt for the HCP agent.
+
+### Quick start
+```bash
+python tools/run_and_report.py \
+  --prompt prompts/system_prompt.md \
+  --rep-text "Quick on-label update for HR+/HER2- mBC?"
+open "$(ls -t results/report_*.html | head -n1)"
+```
+
+### Plug in your real HCP agent & judge (no code edits)
+
+Use dynamic imports (replace with your entrypoints). If needed: `export PYTHONPATH="$(pwd):$PYTHONPATH"`.
+
+```bash
+python tools/run_and_report.py \
+  --hcp medicalpea.agents:hcp_generate \
+  --judge medicalpea.judge:evaluate \
+  --prompt prompts/system_prompt.md \
+  --rep-text "Quick on-label update for HR+/HER2- mBC?"
+open "$(ls -t results/report_*.html | head -n1)"```
+
+Expected signatures:
+
+* `hcp_generate(system_prompt: str, user_input: str) -> str`
+* `evaluate(turns: list[dict]) -> dict` (see schema below)
+
+Prefer hard-coded imports? Edit the “EDIT SECTION A/B” blocks in `tools/run_and_report.py`.
+
+### JSON schema (what the report expects)
+
+The visualizer is tolerant, but this is the “happy path”:
+
+```json
+{
+  "run_id": "run_2025-09-18_15-42-10",
+  "overall": { "weighted_score": 0.86, "final_verdict": "PASS", "notes": "optional" },
+  "scores":  { "clinical": 0.71, "compliance": 0.92, "tone": 0.58 },
+  "turns": [
+    { "speaker": "Rep", "text": "Rep message 1" },
+    { "speaker": "HCP", "text": "HCP reply 1" }
+  ],
+  "evidence": [
+    { "domain": "clinical",   "quote": "Indication is after prior chemo" },
+    { "domain": "compliance", "quote": "on-label" }
+  ],
+  "notes": "Top-level coaching notes (optional)"
+}
+```
+
+**Evidence→turn tagging:** each `evidence[].quote` is matched as a substring in a turn’s `text`; matching turns display colored domain chips.
+
+### Typical workflow
+
+1. **Edit** `prompts/system_prompt.md`.
+2. **Run** the pipeline (with your agent/judge or demo hooks):
+   ```bash
+   python tools/run_and_report.py --hcp medicalpea.agents:hcp_generate --judge medicalpea.judge:evaluate --prompt prompts/system_prompt.md --rep-text "..."
+   ```
+3. **Open** the HTML report and review conversation, scores, tags, and notes.
+4. **Tweak** the system prompt; re-run.
+
+### CLI reference
+```bash
+python tools/run_and_report.py [--prompt PATH] [--rep-text TEXT] \
+  [--hcp module:function] [--judge module:function] \
+  [--run-id ID] [--out-json PATH] [--report PATH]
+```
+
+* `--prompt` path to system prompt markdown (default `prompts/system_prompt.md`)
+* `--rep-text` one-shot Rep message
+* `--hcp` dynamic import for HCP agent (e.g., `package.module:function`)
+* `--judge` dynamic import for judge/eval
+* `--out-json` where to write the artifact (default `results/latest_run.json`)
+* `--report` path to report script (default `tools/report.py`)
+
+### Render an existing JSON directly
+
+If your eval already writes the JSON:
+```bash
+python tools/report.py results/latest_run.json
+open results/report_<run_id>.html
+```
+
+### Troubleshooting
+
+* **ImportError on `--hcp` / `--judge`** → add your repo to PYTHONPATH:
+  ```bash
+  export PYTHONPATH="$(pwd):$PYTHONPATH"
+  ```
+* **No domain bars / tags** → ensure `scores` has numeric values and `evidence[].quote` appears literally in a turn’s `text`.
+* **Empty conversation** → `turns` must be a list of `{speaker, text}`.
+
+### Make it one command (optional)
+```make
+# Makefile
+run:
+	python tools/run_and_report.py --prompt prompts/system_prompt.md --rep-text "Quick on-label update for HR+/HER2- mBC?"
+	open $$(ls -t results/report_*.html | head -n1)
+```
+
+Run with:
+```bash
+make run
+```
