@@ -1,9 +1,0 @@
-{
-  "eval_id": "S48",
-  "eval_file": "evals/single/S48.json",
-  "timestamp": "2025-09-18T17:15:20.502731+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
-  "model_output": "For post-CDK4/6 HR+/HER2- patients, label-based options depend on prior therapies, performance status, and presence of visceral disease. Please clarify her prior endocrine agents and general fitness, then I can highlight relevant on-label considerations. Always refer directly to the SmPC for specific caveats—happy to review if you send it by email."
-}

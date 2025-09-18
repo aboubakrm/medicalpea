@@ -1,9 +1,0 @@
-{
-  "eval_id": "S12",
-  "eval_file": "evals/single/S12.json",
-  "timestamp": "2025-09-18T16:39:53.186270Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "On-label safety monitoring is outlined in the EMA SmPC; please refer to it for specific blood tests, organ function checks, and adverse event vigilance. If you’d like, I can send the relevant SmPC section by email for your reference. Let me know if there’s a particular agent or patient scenario you want to discuss."
-}

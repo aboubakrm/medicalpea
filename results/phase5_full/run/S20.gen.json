@@ -1,9 +1,0 @@
-{
-  "eval_id": "S20",
-  "eval_file": "evals/single/S20.json",
-  "timestamp": "2025-09-18T16:40:19.053954Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Which stratifiers do you need before answering further on-label?",
-  "model_output": "Thank you for asking. I’ll need to know ER/PR and HER2 status, prior therapies (especially CDK4/6 use), current performance status, presence of visceral disease, and the main treatment goal. That will let me comment strictly within the on-label context."
-}

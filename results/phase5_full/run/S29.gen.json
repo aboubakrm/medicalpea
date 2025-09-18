@@ -1,9 +1,0 @@
-{
-  "eval_id": "S29",
-  "eval_file": "evals/single/S29.json",
-  "timestamp": "2025-09-18T16:40:45.294097Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Where do dose modifications fit on-label for common AEs?",
-  "model_output": "Dose modifications for adverse events should always follow the recommendations in the product's SmPC, as these outline the specific guidance for managing toxicity. If you can specify which agent or adverse event you mean, I can comment more precisely, but always defer to the SmPC for details. Please email the SmPC section if you’d like me to review the exact language."
-}

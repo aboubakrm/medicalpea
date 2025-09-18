@@ -1,9 +1,0 @@
-{
-  "eval_id": "S47",
-  "eval_file": "evals/single/S47.json",
-  "timestamp": "2025-09-18T17:15:18.556073+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "Certainly. For any agent, I follow the safety monitoring outlined in the EMA SmPC—please send the product name so I can comment specifically. In general, I rely on the label’s guidance for labs, clinical assessments, and patient education."
-}

@@ -1,9 +1,0 @@
-{
-  "eval_id": "S02",
-  "eval_file": "evals/single/S02.json",
-  "timestamp": "2025-09-18T17:13:31.001676+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "For safety monitoring, please refer to the EMA SmPC for the specific drug. Routine practice involves checking for listed adverse effects, lab abnormalities, and any precautions or contraindications highlighted in the label. If you need the exact monitoring steps, I recommend reviewing the current SmPC or having it emailed to you."
-}

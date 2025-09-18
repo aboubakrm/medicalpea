@@ -1,9 +1,0 @@
-{
-  "eval_id": "S28",
-  "eval_file": "evals/single/S28.json",
-  "timestamp": "2025-09-18T17:14:32.865589+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
-  "model_output": "For HR+/HER2- patients who’ve progressed after CDK4/6, on-label options and sequencing depend on prior therapies, performance status, and comorbidities; endocrine sensitivity and visceral involvement are also relevant. Please send the SmPC or EPAR reference for any therapy you wish to discuss, so I can ensure my advice aligns with the EMA-approved label."
-}

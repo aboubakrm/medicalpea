@@ -1,9 +1,0 @@
-{
-  "eval_id": "S03",
-  "eval_file": "evals/single/S03.json",
-  "timestamp": "2025-09-18T17:13:33.385797+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
-  "model_output": "For post-CDK4/6 HR+/HER2- patients, I focus on approved endocrine partners, prior therapies, and performance status, as per the EMA label. Please email the specific SmPC sections you want to highlight for further review."
-}

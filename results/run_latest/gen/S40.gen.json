@@ -1,9 +1,0 @@
-{
-  "eval_id": "S40",
-  "eval_file": "evals/single/S40.json",
-  "timestamp": "2025-09-18T17:15:01.036881+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Which stratifiers do you need before answering further on-label?",
-  "model_output": "To answer appropriately, I need to know ER/PR and HER2 status, if the patient has had prior CDK4/6 inhibitor therapy, their current performance status, whether there’s visceral crisis or significant comorbidity, and the main treatment goal. Once I have these, I can comment based on the label."
-}

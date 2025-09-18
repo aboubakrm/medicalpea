@@ -1,9 +1,0 @@
-{
-  "eval_id": "S19",
-  "eval_file": "evals/single/S19.json",
-  "timestamp": "2025-09-18T16:40:16.568686Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Where do dose modifications fit on-label for common AEs?",
-  "model_output": "Dose modifications are guided by the SmPC; each agent includes specific instructions for managing adverse events. For precise recommendations and thresholds, please refer directly to the EMA label or send me the SmPC details by email."
-}

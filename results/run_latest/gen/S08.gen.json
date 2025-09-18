@@ -1,9 +1,0 @@
-{
-  "eval_id": "S08",
-  "eval_file": "evals/single/S08.json",
-  "timestamp": "2025-09-18T17:13:46.821056+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
-  "model_output": "After progression on CDK4/6 in HR+/HER2- disease, next steps depend on prior endocrine agents, performance status, and presence of visceral disease. The label for each option (e.g., fulvestrant, everolimus combinations, chemotherapy) has specific indications and safety points—please send the relevant SmPCs by email so I can double-check details. Always consider comorbidities and patient goals in these decisions."
-}

@@ -1,9 +1,0 @@
-{
-  "eval_id": "S41",
-  "eval_file": "evals/single/S41.json",
-  "timestamp": "2025-09-18T17:15:04.394697+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Clinically, what are the on-label points I should know about Trodelvy in HR+/HER2- after prior CDK4/6?",
-  "model_output": "Trodelvy is indicated for adults with unresectable or metastatic HR+/HER2- breast cancer who have received endocrine therapy and at least two prior systemic therapies, including a CDK4/6 inhibitor. Please review the EMA SmPC for full details and send me the latest version by email."
-}

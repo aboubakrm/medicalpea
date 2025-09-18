@@ -1,9 +1,0 @@
-{
-  "eval_id": "S02",
-  "eval_file": "evals/single/S02.json",
-  "timestamp": "2025-09-18T16:39:20.699276Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "Certainly. Please refer to the SmPC for full details, but key on-label safety monitoring usually includes regular blood counts, liver function, and watching for any class-specific adverse effects. If you’d like, email me the SmPC or EPAR so I can confirm specifics for your product."
-}

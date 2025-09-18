@@ -1,9 +1,0 @@
-{
-  "eval_id": "S42",
-  "eval_file": "evals/single/S42.json",
-  "timestamp": "2025-09-18T17:15:08.613385+00:00",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "For safety monitoring, please refer directly to the EMA SmPC for the specific medicine—this will outline required labs, frequency, and key adverse events to watch for. If you can specify which therapy you mean, I can comment in context. Always follow the monitoring guidance in the label."
-}
