@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["eval_id", "scores", "evidence", "notes", "overall"],
+  "properties": {
+    "eval_id": { "type": "string" },
+    "scores": {
+      "type": "object",
+      "required": ["on_label_compliance","clinical_usefulness","brevity_tone","naturalness","safety_integrity"],
+      "properties": {
+        "on_label_compliance": { "type": "number", "minimum": 0, "maximum": 1 },
+        "clinical_usefulness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "brevity_tone":        { "type": "number", "minimum": 0, "maximum": 1 },
+        "naturalness":         { "type": "number", "minimum": 0, "maximum": 1 },
+        "safety_integrity":    { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain","start","end","quote"],
+        "properties": {
+          "domain": { "type": "string" },
+          "start":  { "type": "integer", "minimum": 0 },
+          "end":    { "type": "integer", "minimum": 0 },
+          "quote":  { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "notes": { "type": "string", "maxLength": 600 },
+    "overall": {
+      "type": "object",
+      "required": ["weighted_score","final_verdict","flags"],
+      "properties": {
+        "weighted_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "final_verdict":  { "type": "string", "enum": ["Pass","Fail"] },
+        "flags":          { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

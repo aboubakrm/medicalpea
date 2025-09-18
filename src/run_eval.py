@@ -1,93 +1,128 @@
-import argparse, json, os, csv, time, sys
-from pathlib import Path
+#!/usr/bin/env python3
+import os, json, csv, pathlib, argparse, datetime
+from typing import List, Dict, Any
 
-from dotenv import load_dotenv
-load_dotenv(".env")  # explicit path
+# Optional OpenAI SDK
+try:
+    from openai import OpenAI
+    HAS_OPENAI = True
+except Exception:
+    HAS_OPENAI = False
 
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import HumanMessage, SystemMessage
+DEF_INPUT = "eval_set.jsonl"
+DEF_OUTDIR = "results/evals"
+DEF_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1")
+DEF_SYSTEM = (
+    "You are an on-label, EU/EMA-constrained medical HCP persona. "
+    "Be brief, clinically useful, and avoid speculation."
+)
 
-from rules import apply_rules
-from judge import judge
+def load_jsonl(path: str) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                rows.append(json.loads(line))
+    return rows
 
-def simulator():
-    api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key:
-        raise RuntimeError("Missing GEMINI_API_KEY in environment.")
-    model = os.getenv("GEMINI_MODEL_SIM", "gemini-1.5-flash")
-    return ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=api_key)
+def ensure_dir(p: str):
+    pathlib.Path(p).mkdir(parents=True, exist_ok=True)
 
-def run(dataset_path: Path, prompt_path: Path):
-    # minimal logging so you see what's happening
-    print("[run] dataset:", dataset_path.resolve())
-    print("[run] prompt:", prompt_path.resolve())
+def build_messages(item: Dict[str, Any]) -> List[Dict[str, str]]:
+    # Per-eval system override
+    system_msg = item.get("system") or DEF_SYSTEM
 
-    if not dataset_path.exists():
-        raise FileNotFoundError(f"Dataset not found: {dataset_path}")
-    if not prompt_path.exists():
-        raise FileNotFoundError(f"Prompt not found: {prompt_path}")
+    # Optional context payload appended below the prompt
+    ctx = item.get("context") or {}
+    ctx_str = (json.dumps(ctx, ensure_ascii=False) if ctx else "")
+    user = item["prompt"] if not ctx_str else f"{item['prompt']}\n\n[context]\n{ctx_str}"
 
-    system_prompt = prompt_path.read_text(encoding="utf-8")
-    items = [json.loads(line) for line in dataset_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    print("[run] items:", len(items))
+    # Optional extra_instructions (go after system, before user)
+    extra = item.get("extra_instructions")
+    messages = [{"role":"system","content":system_msg}]
+    if extra:
+        messages.append({"role":"system","content":extra})
+    messages.append({"role":"user","content":user})
+    return messages
 
-    llm = simulator()
-    results = []
+def call_model(messages: List[Dict[str, str]], model: str, params: Dict[str, Any]) -> str:
+    if not HAS_OPENAI:
+        return "[DRY-RUN] OpenAI SDK not installed; skipping API call."
+    cli = OpenAI()
+    # Minimal safe overrides
+    temperature = float(params.get("temperature", 0.2))
+    max_tokens = int(params.get("max_tokens", 500))
+    resp = cli.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        seed=params.get("seed")
+    )
+    return resp.choices[0].message.content.strip()
 
-    for it in items:
-        rep_prompt = it["prompt"]
-        msgs = [SystemMessage(content=system_prompt), HumanMessage(content=rep_prompt)]
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--input", default=DEF_INPUT)
+    ap.add_argument("--outdir", default=DEF_OUTDIR)
+    ap.add_argument("--model", default=DEF_MODEL)
+    ap.add_argument("--limit", type=int, default=0, help="0 = all")
+    args = ap.parse_args()
 
-        # --- simulate (robust) ---
-        sim_err = ""
-        try:
-            reply = llm.invoke(msgs).content
-        except Exception as e:
-            sim_err = f"simulator_error: {e}"
-            reply = f"[{sim_err}]"
+    ensure_dir(args.outdir)
+    rows = load_jsonl(args.input)
+    if args.limit > 0:
+        rows = rows[:args.limit]
 
-        # rules
-        rules_ok = apply_rules(reply, it.get("expected_rules", []))
-        rules_score = sum(1 for v in rules_ok.values() if v)
+    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    csv_path = os.path.join(args.outdir, f"run-{stamp}.csv")
+    with open(csv_path, "w", newline="", encoding="utf-8") as cf:
+        w = csv.writer(cf)
+        w.writerow([
+            "eval_id","domain","model","status","output_path",
+            "eval_type","judge_tags"
+        ])
+        for i, item in enumerate(rows, 1):
+            eval_id = item.get("eval_id", f"row_{i:04d}")
+            model = item.get("model") or args.model
+            params = item.get("params") or {}
 
-        # --- judge (robust) ---
-        jerr = ""
-        try:
-            jscore = judge(it["category"], rep_prompt, reply, it.get("llm_judge_criteria", ""))
-        except Exception as e:
-            jscore = 1  # neutral fallback
-            jerr = f"judge_error: {e}"
+            messages = build_messages(item)
+            out_text = call_model(messages, model, params)
 
-        results.append({
-            "id": it["id"],
-            "category": it["category"],
-            "rep_prompt": rep_prompt,
-            "hcp_reply": reply,
-            "rules_pass": rules_ok,
-            "rules_score": rules_score,
-            "judge_score": jscore,
-            "note": "; ".join(x for x in (sim_err, jerr) if x)
-        })
+            md_path = os.path.join(args.outdir, f"{eval_id}.md")
+            with open(md_path, "w", encoding="utf-8") as mf:
+                mf.write(f"# {eval_id} — {item.get('domain','')}\n\n")
+                mf.write("## Prompt\n\n")
+                mf.write(item["prompt"] + "\n\n")
+                if item.get("system"):
+                    mf.write("## System (override)\n\n")
+                    mf.write(item["system"] + "\n\n")
+                if item.get("extra_instructions"):
+                    mf.write("## Extra Instructions\n\n")
+                    mf.write(item["extra_instructions"] + "\n\n")
+                if item.get("context"):
+                    mf.write("## Context\n\n")
+                    mf.write("```json\n" + json.dumps(item["context"], indent=2, ensure_ascii=False) + "\n```\n\n")
+                if item.get("judge"):
+                    mf.write("## Judge (metadata)\n\n")
+                    mf.write("```json\n" + json.dumps(item["judge"], indent=2, ensure_ascii=False) + "\n```\n\n")
+                mf.write("## Model Output\n\n")
+                mf.write(out_text + "\n")
 
-        time.sleep(0.2)  # be gentle with the API
+            w.writerow([
+                eval_id,
+                item.get("domain",""),
+                model,
+                "ok",
+                md_path,
+                (item.get("eval_type") or ""),
+                ",".join(item.get("judge_tags", []))
+            ])
+            print(f"[{i}/{len(rows)}] {eval_id} -> {md_path}")
 
-    outdir = Path("results"); outdir.mkdir(exist_ok=True)
-    (outdir / "latest_run.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
-    with open(outdir / "latest_run.csv", "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
-        w.writerow(["id","category","rules_score","judge_score"])
-        for r in results:
-            w.writerow([r["id"], r["category"], r["rules_score"], r["judge_score"]])
-
-    print("[run] Done. Wrote results/latest_run.json and results/latest_run.csv")
+    print(f"\nSummary: {csv_path}")
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--dataset", default="eval/eval_set.jsonl", type=str)
-    ap.add_argument("--prompt", default="prompt/hcp_system_prompt.md", type=str)
-    args = ap.parse_args()
-    try:
-        run(Path(args.dataset), Path(args.prompt))
-    except Exception as e:
-        print("[FATAL]", e)
-        sys.exit(1)
+    main()

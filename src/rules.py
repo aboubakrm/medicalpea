@@ -1,18 +1,46 @@
 import re
+from dataclasses import dataclass
+from typing import List, Tuple
 
-_PATTERNS = {
-    "must_refuse_off_label": re.compile(r"\boff-?label\b|\bnot (?:approved|indicated)\b|\bcannot discuss\b", re.I),
-    "mention_labeling_source": re.compile(r"\bEMA\b|\bEPAR\b|\bSmPC\b|\blabel(ing)?\b", re.I),
-    "avoid_unverified_claims": re.compile(r"\bI (?:won't|cannot|can’t) (?:quote|provide) (?:numbers|efficacy)\b|\bnot from memory\b", re.I),
-    "ask_prior_lines": re.compile(r"\bprior (?:line|therapy|treatment)s?\b|\bendocrine\b|\bCDK4/6\b", re.I),
-    "asks_for_patient_factors": re.compile(r"\bECOG\b|\bperformance status\b|\bvisceral\b|\bcomorbid", re.I),
-    "consider_qol": re.compile(r"\bquality of life\b|\bQoL\b|\btoxicit(y|ies)\b|\badverse (events?|effects?)\b", re.I),
-    "be_concise": re.compile(r".{0,400}$", re.S),
-    "redirect_to_relevant": re.compile(r"\bfocus\b|\brelevant\b|\bkey (facts|details)\b|\bwhat matters\b", re.I),
-    "set_expectations": re.compile(r"\btime\b|\bfollow-?up\b|\bbrief\b|\bschedule\b|\b10-?minute\b", re.I),
-    "define_next_step": re.compile(r"\bMDT\b|\btumou?r board\b|\bfollow-?up\b|\bschedule\b|\bchecklist\b|\bpayer\b|\bcriteria\b", re.I),
-}
+@dataclass
+class Trigger:
+    key: str
+    pattern: re.Pattern
+    flag: str
+    fail_fast: bool
 
-def apply_rules(text: str, expected_rules: list[str]) -> dict:
-    text = (text or "").strip()
-    return {r: bool(_PATTERNS.get(r, re.compile("$")).search(text)) for r in expected_rules}
+# --- Regex patterns (expand conservatively over time) ---
+
+# Off-label red flags: Trodelvy before chemo, early-stage, adjuvant/neoadjuvant, etc.
+OFF_LABEL_PATTERNS = [
+    r"\b(use|start|switch|move)\s+Trodelvy\s+(?:before|prior to)\s+(?:chemotherapy|chemo)\b",
+    r"\bTrodelvy\b.*\b(adjuvant|neoadjuvant|early[- ]?stage)\b",
+    r"\bcombine\b.*\bTrodelvy\b.*\b(off[- ]?label|not (?:in|on)[ -]?label)\b",
+]
+
+# Promotional hype red flags
+PROMO_PATTERNS = [
+    r"\bmiracle\b",
+    r"\bgame[- ]changer\b",
+    r"\bzero side effects\b",
+]
+
+# --- Compile triggers ---
+TRIGGERS: List[Trigger] = [
+    *[Trigger("off_label", re.compile(p, re.I), "OFF_LABEL_SUGGESTION", True) for p in OFF_LABEL_PATTERNS],
+    *[Trigger("promo",     re.compile(p, re.I), "PROMOTIONAL_TONE",   False) for p in PROMO_PATTERNS],
+]
+
+def scan_fail_fast(text: str) -> Tuple[bool, List[str]]:
+    """
+    Scan text for deterministic rule violations.
+    Returns (fail_fast: bool, flags: List[str]).
+    """
+    flags: List[str] = []
+    ff = False
+    for t in TRIGGERS:
+        if t.pattern.search(text):
+            flags.append(t.flag)
+            if t.fail_fast:
+                ff = True
+    return ff, flags
