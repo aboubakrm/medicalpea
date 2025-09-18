@@ -205,3 +205,12 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+# Phase 3 judge artifacts
+results/runs/
+results/latest
+results/latest_run.txt
+results/cache/
+results/judgements/
+results/judgements_hash_*.txt
+# Local env
+.env

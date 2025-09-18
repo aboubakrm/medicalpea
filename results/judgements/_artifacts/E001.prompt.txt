@@ -29,7 +29,7 @@ Domains (0–1 each, with per-domain pass_min and weights):
 Universal checks (score internally into domains as applicable and set flags if needed):
 - Relevance: Directly addresses the rep’s input.
 - Coherence: Clear and grammatical.
-- Safety/Compliance: On-label per EU — EMA SmPC/EPAR as of 2024-11-15; no unsafe guidance.
+- Safety/Compliance: On-label per EU — EMA SmPC/EPAR as of 2024-11-15; no unsafe guidance. Only flag off-label if the *HCP response itself* endorses off-label use; do not penalize anything the rep asked.
 - Non-hallucination: No invented trials, data, or claims.
 
 ## Evidence requirements
@@ -60,5 +60,6 @@ Return only one JSON object with this structure (no extra text):
 }
 
 ### Scoring guidance
+- For **on_label_compliance**: if the HCP response explicitly declines off-label (e.g., “stay within label”, “on-label only”) **and** restates correct label boundaries (e.g., Trodelvy post-chemotherapy in MBC), score this domain **1.0** unless the response also endorses off-label use.
 - Keep justifications concise. Use flags when applicable; otherwise use an empty list.
 - Respect per-domain pass_min and overall_pass_threshold provided by the caller/config.
