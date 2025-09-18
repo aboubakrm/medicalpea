@@ -203,6 +203,3 @@ pip freeze > requirements-lock.txt
 black==24.8.0
 ruff==0.5.6
 ```
-
-```
-```
