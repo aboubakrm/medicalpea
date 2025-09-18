@@ -12,7 +12,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--eval_glob", default="evals/single/*.json")
     ap.add_argument("--prompt_path", default="prompt/hcp_system_prompt.md")
-    ap.add_argument("--outdir", default="results/phase5_full/run")
+    ap.add_argument("--outdir", default="results/run_latest/gen")
     ap.add_argument("--model", default="gpt-4.1")
     ap.add_argument("--temp", type=float, default=0.6)
     args = ap.parse_args()

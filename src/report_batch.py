@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from string import Template
 
 TEMPLATE = Template("""<!doctype html><html><head>
-<meta charset="utf-8"><title>Single Evals — Report</title>
+<meta charset="utf-8"><title>Single Evals — Report (Latest Run)</title>
 <style>
 body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:24px}
 table{border-collapse:collapse;width:100%} th,td{border:1px solid #ddd;padding:10px;vertical-align:top}
@@ -12,7 +12,7 @@ th{background:#fafafa;text-align:left}
 code{background:#f6f6f6;padding:2px 4px;border-radius:4px}
 details{margin:6px 0}
 </style></head><body>
-<h1>Single Evals — Report</h1>
+<h1>Single Evals — Report (Latest Run)</h1>
 <p>Generated: $now • Items: <b>$n</b> • Pass rate: <b>$pass_rate%</b> • Avg score: <b>$avg_score</b></p>
 <h2>Summary</h2>
 <table>
@@ -47,8 +47,8 @@ def render_fail_buckets(buckets):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--judged_glob", default="results/phase5_full/judged/*.judge.json")
-    ap.add_argument("--outdir", default="results/phase5_full/report")
+    ap.add_argument("--judged_glob", default="results/run_latest/judged/*.judge.json")
+    ap.add_argument("--outdir", default="results/run_latest/report")
     args = ap.parse_args()
 
     os.makedirs(args.outdir, exist_ok=True)

@@ -34,9 +34,9 @@ def _safe_json(text: str):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--inputs_glob", default="results/phase5_full/run/*.gen.json")
+    ap.add_argument("--inputs_glob", default="results/run_latest/gen/*.gen.json")
     ap.add_argument("--judge_prompt_path", default="prompt/judge_master.md")
-    ap.add_argument("--outdir", default="results/phase5_full/judged")
+    ap.add_argument("--outdir", default="results/run_latest/judged")
     ap.add_argument("--model", default="gpt-4.1")
     ap.add_argument("--temp", type=float, default=0.0)
     args = ap.parse_args()
