@@ -1,17 +1,15 @@
-# ctcHealth Medical AI Prompt Engineer — Aboubaker Saleh
-This repo contains my deliverables for the ctcHealth assessment.
+# medicalpea — HCP Simulation Eval (CTC Health)
 
-## Structure
-- `prompt/hcp_system_prompt.md` — Breast oncologist persona (Markdown, ≤40k tokens)
-- `eval/eval_set.jsonl` — ≤50 evaluation items mapped to rubric categories
-- `src/run_eval.py` — CLI runner; applies rules + LLM-as-judge; writes results
-- `src/rules.py` / `src/judge.py` — Deterministic checks + compact 0/1/2 rubric
-- `results/` — `latest_run.csv/json`
+## What this repo contains
+- **Persona prompt**: `prompt/hcp_system_prompt.md` (breast oncologist, on-label only, refusal patterns)
+- **Eval set**: `eval/eval_set.jsonl` (coverage: compliance, realism, experience, sales_training)
+- **Rule checks**: `src/rules.py` (regex-based)
+- **Runners**
+  - `src/run_offline.py` → offline, no API; always writes results
+  - `src/run_eval.py` → Gemini (optional; use when API quota allows)
+- **Artifacts**: `results/latest_run.json` & `results/latest_run.csv`
 
-## Models
-- Simulator: **Gemini 2.5 Pro**
-- Judge: **Llama 3.x via Groq**
-Rationale: long context + steerability for the simulator; separate provider for judge reduces self-judging bias.
-
-## Run
+## Quick start (offline — no API required)
+```bash
+python src/run_offline.py --dataset eval/eval_set.jsonl --prompt prompt/hcp_system_prompt.md
 

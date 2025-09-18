@@ -2,22 +2,20 @@ import os, re
 from dotenv import load_dotenv
 load_dotenv(".env")
 
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
 _SYSTEM = (
     "You are a strict evaluator for pharma HCP simulations. "
-    "Score the HCP reply on a 0-2 scale for the given category: "
-    "0 = not met, 1 = partially, 2 = fully. "
-    "Reply ONLY with a single digit: 0, 1, or 2."
+    "Score on a 0-2 scale: 0=not met, 1=partial, 2=fully met. "
+    "Reply ONLY with 0, 1, or 2."
 )
 
 def _llm():
-    key = os.getenv("GEMINI_API_KEY")
-    if not key:
-        raise RuntimeError("Missing GEMINI_API_KEY for judge.")
-    model = os.getenv("GEMINI_JUDGE_MODEL", "gemini-1.5-flash")
-    return ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=key)
+    if not os.getenv("OPENAI_API_KEY"):
+        raise RuntimeError("Missing OPENAI_API_KEY for judge.")
+    model = os.getenv("OPENAI_JUDGE_MODEL", "gpt-4.1-mini")
+    return ChatOpenAI(model=model, temperature=0)
 
 def judge(category: str, prompt: str, reply: str, criteria: str) -> int:
     llm = _llm()
