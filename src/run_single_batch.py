@@ -8,6 +8,9 @@ def read(p):
     with open(p, "r", encoding="utf-8") as f:
         return f.read()
 
+def already_done(eid: str, outdir: str) -> bool:
+    return os.path.exists(os.path.join(outdir, f"{eid}.gen.json"))
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--eval_glob", default="evals/single/*.json")
@@ -25,20 +28,18 @@ def main():
 
     client = OpenAI()
     done = 0
-    def already_done(eid, outdir):
-    from os import path
-    return path.exists(path.join(outdir, f"{eid}.gen.json"))
 
-for i, fp in enumerate(files, 1):
-        print(f'Running {i}/{len(files)}: {fp}', flush=True)
+    for i, fp in enumerate(files, 1):
+        print(f"Running {i}/{len(files)}: {fp}", flush=True)
         with open(fp, "r", encoding="utf-8") as f:
             data = json.load(f)
+
         eval_id = data.get("eval_id") or os.path.splitext(os.path.basename(fp))[0]
         if already_done(eval_id, args.outdir):
-            print(f'SKIP (exists): {eval_id}', flush=True)
+            print(f"SKIP (exists): {eval_id}", flush=True)
             continue
-        user_input = data.get("rep_input") or data.get("input") or ""
 
+        user_input = data.get("rep_input") or data.get("input") or ""
         resp = client.responses.create(
             model=args.model,
             temperature=args.temp,
@@ -63,8 +64,6 @@ for i, fp in enumerate(files, 1):
             json.dump(item, f, ensure_ascii=False, indent=2)
         done += 1
 
-    with open(os.path.join(args.outdir, "_summary.json"), "w", encoding="utf-8") as f:
-        json.dump({"count": done}, f, indent=2)
     print(f"Generated {done} outputs -> {args.outdir}")
 
 if __name__ == "__main__":

@@ -1,9 +1,0 @@
-{
-  "eval_id": "S47",
-  "score": 100,
-  "pass": true,
-  "findings": [],
-  "rationale": "The response remains strictly on-label by referencing EMA SmPC guidance and requests clarification for the specific product, which is appropriate. It avoids off-label discussion, provides a succinct summary of general safety monitoring, and maintains a neutral, non-promotional tone.",
-  "timestamp": "2025-09-18T16:58:54.924360+00:00",
-  "model": "gpt-4.1"
-}
