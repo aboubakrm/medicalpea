@@ -1,9 +1,0 @@
-{
-  "eval_id": "S25",
-  "eval_file": "evals/single/S25.json",
-  "timestamp": "2025-09-18T16:40:32.877561Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Which stratifiers do you need before answering further on-label?",
-  "model_output": "To give an on-label answer, I need to know ER, PR, and HER2 status, prior lines of therapy (especially CDK4/6 exposure), performance status, and if there’s visceral involvement or crisis. This helps ensure my advice matches the approved indication."
-}

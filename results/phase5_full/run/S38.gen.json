@@ -1,9 +1,0 @@
-{
-  "eval_id": "S38",
-  "eval_file": "evals/single/S38.json",
-  "timestamp": "2025-09-18T16:41:05.257945Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
-  "model_output": "For HR+/HER2- patients progressed after CDK4/6, label-based options depend on prior endocrine and chemo exposure, performance status, and presence of visceral disease. The SmPC outlines sequential endocrine or chemotherapy options; tolerability and comorbidities guide the choice. Please send the label details by email so I can review the exact caveats."
-}

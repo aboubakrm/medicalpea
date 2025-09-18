@@ -1,9 +1,0 @@
-{
-  "eval_id": "S32",
-  "eval_file": "evals/single/S32.json",
-  "timestamp": "2025-09-18T16:40:51.761577Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "For safety monitoring, please refer to the EMA SmPC for the specific medicine, as recommendations differ by agent. If you tell me which drug you mean, I can clarify the main on-label safety points."
-}

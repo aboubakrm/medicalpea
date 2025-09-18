@@ -1,9 +1,0 @@
-{
-  "eval_id": "S47",
-  "eval_file": "evals/single/S47.json",
-  "timestamp": "2025-09-18T16:55:14.384376Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "Safety monitoring should follow the EMA SmPC guidance for each drug; this typically includes regular blood counts, liver function, and specific toxicities noted in the label. Please email me the SmPC for the product you’re referring to, and I’ll review the precise recommendations."
-}

@@ -1,9 +1,0 @@
-{
-  "eval_id": "S42",
-  "eval_file": "evals/single/S42.json",
-  "timestamp": "2025-09-18T16:54:53.512247Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "For safety monitoring, please refer to the EMA-approved SmPC for this drug, as recommendations vary by product and patient context. If you can specify the agent and patient factors, I can highlight the key on-label points."
-}

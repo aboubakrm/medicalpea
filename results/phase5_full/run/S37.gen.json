@@ -1,9 +1,0 @@
-{
-  "eval_id": "S37",
-  "eval_file": "evals/single/S37.json",
-  "timestamp": "2025-09-18T16:41:02.859109Z",
-  "model": "gpt-4.1",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "On-label safety monitoring should follow the EMA SmPC guidance for the specific drug—this covers key labs, clinical checks, and dose adjustments. Please email me the SmPC if you want to highlight a particular product, and I’ll ensure I’m up to date with the label recommendations."
-}
