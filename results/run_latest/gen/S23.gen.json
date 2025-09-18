@@ -1,0 +1,9 @@
+{
+  "eval_id": "S23",
+  "eval_file": "evals/single/S23.json",
+  "timestamp": "2025-09-18T17:14:22.409788+00:00",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
+  "model_output": "For HR+/HER2- patients progressing after CDK4/6, subsequent endocrine or chemo choices should follow the label, considering prior agents, performance status, and visceral involvement. The EMA SmPC will outline any restrictions or specific monitoring; please send the relevant document by email for precise reference. The key is matching on-label options to patient needs while watching for contraindications."
+}

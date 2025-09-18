@@ -1,0 +1,14 @@
+{
+  "eval_id": "S14",
+  "score": 95,
+  "pass": true,
+  "findings": [
+    "Response remains strictly on-label and does not discuss off-label use.",
+    "Appropriately requests the SmPC to confirm product-specific recommendations.",
+    "Does not provide specific dose modifications without knowing the product, which is compliant.",
+    "Could have briefly mentioned that dose modifications are typically outlined for common AEs in the SmPC, but overall is succinct and non-promotional."
+  ],
+  "rationale": "The response is compliant, avoids off-label discussion, and requests necessary information to provide accurate, on-label guidance. It is succinct and avoids a promotional tone, though a brief general statement about dose modifications for common AEs could have added minor clinical value.",
+  "timestamp": "2025-09-18T17:16:22.754052+00:00",
+  "model": "gpt-4.1"
+}

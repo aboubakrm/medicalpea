@@ -1,0 +1,9 @@
+{
+  "eval_id": "S12",
+  "eval_file": "evals/single/S12.json",
+  "timestamp": "2025-09-18T17:13:55.946658+00:00",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
+  "model_output": "On-label safety monitoring should follow the EMA SmPC guidance for each drug; adverse events, lab parameters, and dose adjustments are detailed there. Please send the specific product SmPC by email if you want to discuss particular monitoring requirements. Always individualize based on patient comorbidities and risk factors."
+}

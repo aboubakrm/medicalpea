@@ -1,0 +1,13 @@
+{
+  "eval_id": "S12",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Response remains strictly on-label by referencing EMA SmPC guidance.",
+    "Declines to discuss specifics without knowing the product, appropriately asking for more information.",
+    "Provides a succinct, non-promotional summary and advises individualization based on patient factors."
+  ],
+  "rationale": "The response adheres to compliance by referencing the SmPC and not providing off-label or promotional content. It requests necessary stratifiers and maintains a clinically appropriate, neutral tone.",
+  "timestamp": "2025-09-18T17:16:13.747473+00:00",
+  "model": "gpt-4.1"
+}

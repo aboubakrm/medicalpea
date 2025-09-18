@@ -1,0 +1,13 @@
+{
+  "eval_id": "S19",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Response remains strictly on-label and refers to the SmPC for guidance.",
+    "Requests product specification before providing further detail, ensuring compliance.",
+    "Declines to discuss specifics without necessary information, avoiding off-label risk."
+  ],
+  "rationale": "The response is fully compliant, avoids off-label discussion, and appropriately requests missing information. It provides clear, on-label direction and maintains a neutral, non-promotional tone.",
+  "timestamp": "2025-09-18T17:16:39.419108+00:00",
+  "model": "gpt-4.1"
+}

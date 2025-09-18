@@ -1,0 +1,14 @@
+{
+  "eval_id": "S16",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Response accurately states Trodelvy's on-label indication for ER+/HER2- advanced breast cancer after prior endocrine therapy and at least two prior systemic therapies, including CDK4/6 inhibitor.",
+    "References the TROPiCS-02 study, which is the pivotal trial supporting the indication.",
+    "Advises to consult the EMA SmPC for full details, maintaining compliance.",
+    "No off-label suggestions or promotional language present."
+  ],
+  "rationale": "The response is strictly on-label, clinically relevant, and avoids any off-label or promotional content. It provides clear, concise information and refers to the appropriate regulatory document for further details.",
+  "timestamp": "2025-09-18T17:16:28.613122+00:00",
+  "model": "gpt-4.1"
+}

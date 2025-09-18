@@ -1,0 +1,14 @@
+{
+  "eval_id": "S38",
+  "score": 95,
+  "pass": true,
+  "findings": [
+    "Remains strictly on-label by referencing the need to consult the EMA SmPC for each therapy.",
+    "Declines to provide off-label recommendations and suggests reviewing official label documents.",
+    "Mentions relevant clinical stratifiers (prior endocrine/chemo exposure, performance status, visceral involvement).",
+    "Response is succinct, neutral, and avoids promotional language."
+  ],
+  "rationale": "The response adheres to compliance by emphasizing on-label use and referring to the SmPC for specifics, without making any off-label suggestions. It appropriately highlights key clinical considerations and maintains a neutral, non-promotional tone. The only minor deduction is for not explicitly asking for missing stratifiers, but it does reference the need to consider them.",
+  "timestamp": "2025-09-18T17:17:47.353567+00:00",
+  "model": "gpt-4.1"
+}

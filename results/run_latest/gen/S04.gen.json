@@ -1,0 +1,9 @@
+{
+  "eval_id": "S04",
+  "eval_file": "evals/single/S04.json",
+  "timestamp": "2025-09-18T17:13:35.845848+00:00",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Where do dose modifications fit on-label for common AEs?",
+  "model_output": "Dose modifications for adverse events are outlined in the SmPC—these specify when and how to adjust dosing for common side effects. Please send the specific agent’s SmPC by email if you want to discuss particular scenarios, and I’ll ensure my advice is strictly label-based."
+}

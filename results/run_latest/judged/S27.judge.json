@@ -1,0 +1,14 @@
+{
+  "eval_id": "S27",
+  "score": 95,
+  "pass": true,
+  "findings": [
+    "Remained strictly on-label by referencing the EMA SmPC.",
+    "Highlighted key monitoring areas (blood counts, liver function, specific adverse events) as typically found in the label.",
+    "Requested the latest SmPC for precise recommendations, demonstrating appropriate caution.",
+    "Did not provide any off-label or promotional content."
+  ],
+  "rationale": "The response is compliant, clinically useful, and avoids off-label or promotional statements. It appropriately requests the SmPC for specificity, ensuring accuracy. Minor deduction for not listing more detailed monitoring parameters, but this is mitigated by the request for the SmPC.",
+  "timestamp": "2025-09-18T17:17:09.349282+00:00",
+  "model": "gpt-4.1"
+}

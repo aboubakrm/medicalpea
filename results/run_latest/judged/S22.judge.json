@@ -1,0 +1,13 @@
+{
+  "eval_id": "S22",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Declined to provide specifics without knowing the drug, thus avoiding off-label discussion.",
+    "Prompted for missing stratifier (specific therapy) to ensure on-label accuracy.",
+    "Directed to SmPC for on-label safety monitoring guidance."
+  ],
+  "rationale": "The response remains strictly on-label by requesting clarification before providing details, avoids any off-label or promotional content, and appropriately refers to the SmPC. It also asks for the necessary stratifier, aligning with all evaluation criteria.",
+  "timestamp": "2025-09-18T17:16:50.822200+00:00",
+  "model": "gpt-4.1"
+}

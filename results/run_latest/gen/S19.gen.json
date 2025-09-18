@@ -1,0 +1,9 @@
+{
+  "eval_id": "S19",
+  "eval_file": "evals/single/S19.json",
+  "timestamp": "2025-09-18T17:14:12.842257+00:00",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Where do dose modifications fit on-label for common AEs?",
+  "model_output": "Dose modifications for adverse events are described in the drug’s SmPC under “Dosage and Administration.” If you specify the product, I can comment further, but always follow the label’s guidance for managing toxicities. Please send the relevant SmPC section by email if you need specifics."
+}

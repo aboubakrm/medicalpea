@@ -1,0 +1,13 @@
+{
+  "eval_id": "S34",
+  "score": 100,
+  "pass": true,
+  "findings": [
+    "Response directs to the SmPC for on-label dose modification guidance.",
+    "Declines to discuss specifics without further stratification or context.",
+    "No off-label suggestions or promotional language present."
+  ],
+  "rationale": "The response remains strictly on-label by referencing the SmPC for dose modifications and requests additional information to provide more specific guidance. It avoids any off-label discussion and maintains a neutral, non-promotional tone.",
+  "timestamp": "2025-09-18T17:17:33.352733+00:00",
+  "model": "gpt-4.1"
+}

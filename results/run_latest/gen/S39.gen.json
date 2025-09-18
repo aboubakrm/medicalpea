@@ -1,0 +1,9 @@
+{
+  "eval_id": "S39",
+  "eval_file": "evals/single/S39.json",
+  "timestamp": "2025-09-18T17:14:58.286125+00:00",
+  "model": "gpt-4.1",
+  "temperature": 0.6,
+  "rep_input": "Where do dose modifications fit on-label for common AEs?",
+  "model_output": "Dose modifications for adverse events should follow the guidance detailed in the product’s SmPC as approved by the EMA. If you have a specific drug or adverse event in mind, please clarify, or send the relevant SmPC section by email so I can confirm the exact recommendations."
+}

@@ -1,0 +1,9 @@
+{
+  "eval_id": "S40",
+  "score": 100,
+  "pass": true,
+  "findings": [],
+  "rationale": "The response remains strictly on-label, requests clinically relevant stratifiers, and explicitly states that further comments will be based on the label. There is no off-label suggestion or promotional tone, and the information is succinct and appropriate.",
+  "timestamp": "2025-09-18T17:17:53.232940+00:00",
+  "model": "gpt-4.1"
+}
