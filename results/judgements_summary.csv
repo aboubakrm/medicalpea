@@ -1,0 +1,2 @@
+eval_id,on_label_compliance,clinical_usefulness,brevity_tone,naturalness,safety_integrity,weighted_score,final_verdict,flags
+E001,1.0,0.8,1.0,1.0,1.0,0.96,Pass,

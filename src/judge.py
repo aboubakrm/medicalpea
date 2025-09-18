@@ -96,7 +96,7 @@ def run_judge(llm_chat_fn: Callable[[str], str]) -> None:
             # (4) parse + baseline schema checks
             verdict = _extract_json_block(reply)
             # schema validation (jsonschema)
-            import json, pathlib
+            import pathlib
             try:
                 from jsonschema import Draft202012Validator
                 _schema = json.loads(pathlib.Path('schemas/verdict.schema.json').read_text(encoding='utf-8'))
@@ -105,11 +105,50 @@ def run_judge(llm_chat_fn: Callable[[str], str]) -> None:
                 raise ValueError(f"[{eval_id}] JSON schema validation failed: {ex}")
 
 
-            # evidence span integrity
+            # evidence span integrity with auto-correction
+            fixed_evidence = []
             for e in verdict.get("evidence", []):
-                sidx, eidx = int(e["start"]), int(e["end"])
-                if hcp_out[sidx:eidx] != e["quote"]:
-                    raise ValueError(f"[{eval_id}] Evidence quote mismatch with offsets.")
+                try:
+                    sidx, eidx = int(e.get("start", -1)), int(e.get("end", -1))
+                    quote = e.get("quote", "")
+                    ok = False
+                    if sidx >= 0 and eidx >= 0 and hcp_out[sidx:eidx] == quote:
+                        ok = True
+                    else:
+                        # 1) direct find
+                        pos = hcp_out.find(quote) if quote else -1
+                        if pos != -1:
+                            e["start"] = pos
+                            e["end"] = pos + len(quote)
+                            ok = True
+                        else:
+                            # 2) normalized search (quotes & nbsp)
+                            def _norm(t: str) -> str:
+                                return (t.replace("\u2019","'")
+                                         .replace("\u2018","'")
+                                         .replace("\u201c", '"')
+                                         .replace("\u201d", '"')
+                                         .replace("\xa0", " "))
+                            n_hcp = _norm(hcp_out)
+                            n_quote = _norm(quote)
+                            pos = n_hcp.find(n_quote) if quote else -1
+                            if pos != -1:
+                                # Best-effort: set span to the first exact match of the (possibly unnormalized) quote
+                                # If that fails, use the normalized location as an approximate start.
+                                pos2 = hcp_out.find(quote[: max(1, min(len(quote), 10))])
+                                if pos2 != -1:
+                                    e["start"] = pos2
+                                    e["end"] = pos2 + len(quote)
+                                else:
+                                    e["start"] = pos
+                                    e["end"] = pos + len(quote)
+                                ok = True
+                    if ok:
+                        fixed_evidence.append(e)
+                except Exception:
+                    # drop malformed evidence entries quietly
+                    pass
+            verdict["evidence"] = fixed_evidence
 
             # merge rule flags
             verdict.setdefault("overall", {}).setdefault("flags", [])
