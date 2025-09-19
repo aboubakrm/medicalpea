@@ -199,6 +199,3 @@ langchain==0.2.14
 langchain-openai==0.1.22
 pydantic==2.8.2
 ```
-black==24.8.0
-ruff==0.5.6
-```
