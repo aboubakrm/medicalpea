@@ -1,11 +1,13 @@
+# virtual env / OS junk
 .venv/
-.env
+.DS_Store
 __pycache__/
 *.pyc
-*.bak
-*.save
-.DS_Store
 
-results/**/index.html
-results/**/gen/*.gen.json
-results/**/judged/*.judge.json
+# secrets
+.env
+.env.*
+
+# run artifacts (never push)
+results/
+.archive/
