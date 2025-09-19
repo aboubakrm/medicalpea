@@ -64,13 +64,14 @@ echo 'OPENAI_API_KEY=sk-...' > .env
 
 ./run_eval.sh
 
-open results/run_latest/latest/report/index.html
-open results/run_latest/latest/report/chat/index.html
+# Open the newest report + chat index
+BASE=$(ls -dt results/run_latest/*/ | head -1 | sed 's:/$::')
+open "$BASE/report/index.html"
+open "$BASE/report/chat/index.html"
 ```
----
+## Manual run (equivalent)
 
-## Manual run (equivalent):
-
+```bash
 python src/run_eval.py \
   --dataset eval/eval_set.jsonl \
   --hcp_prompt_path prompt/hcp_system_prompt.md \
@@ -79,35 +80,49 @@ python src/run_eval.py \
   --model gpt-4o \
   --judge_model gpt-4o \
   --temp 0.6
+```
+# Then open:
+BASE=$(ls -dt results/run_latest/*/ | head -1 | sed 's:/$::')
+open "$BASE/report/index.html"
+open "$BASE/report/chat/index.html"
 
-  ---
-
+---
 ## Quick smoke test (10 cases)
 
 ```bash
 head -n 10 eval/eval_set.jsonl > eval/eval_set_10.jsonl
-python src/run_eval.py --dataset eval/eval_set_10.jsonl \
+```
+# Option 1: via the runner
+DATASET=eval/eval_set_10.jsonl ./run_eval.sh
+
+# Option 2: direct python
+python src/run_eval.py \
+  --dataset eval/eval_set_10.jsonl \
   --hcp_prompt_path prompt/hcp_system_prompt.md \
   --judge_prompt_path prompt/judge_master.md \
   --outdir results/run_latest \
   --model gpt-4o \
   --judge_model gpt-4o \
   --temp 0.6
-open results/run_latest/latest/report/index.html
-```
+
+BASE=$(ls -dt results/run_latest/*/ | head -1 | sed 's:/$::')
+open "$BASE/report/index.html"
+open "$BASE/report/chat/index.html"
 
 ---
 
 ## Outputs
 
 ```results/run_latest/<TIMESTAMP>/
-  gen/      SXX.gen.json
-  judged/   SXX.judge.json          # {score, pass, findings, rationale}
-  report/
-    index.html                      # clickable Eval IDs → chat page
-    summary.csv                     # eval_id, score, pass, chat
-    chat/
-      index.html, S01.html ...      # Sales Rep (right/top) • Dr Tawel (left)
+gen/ SXX.gen.json
+judged/ SXX.judge.json # {score, pass, findings, rationale}
+report/
+    index.html # summary table; links to chats
+    summary.csv # eval_id, score, pass, chat
+chat/
+    index.html # chat gallery
+    S01.html … # Sales Rep (right/top), Dr Tawel (left)
+# + PASS/FAIL badge, Score, Top Findings
 ````
 
 ---
@@ -115,17 +130,24 @@ open results/run_latest/latest/report/index.html
 ## Repo Structure
 
 ```text
-docs/               pipeline diagram
-prompt/             hcp_system_prompt.md, judge_master.md
-eval/               eval_set.jsonl  (50 single-turn cases)
-src/                run_eval.py, report_batch.py, make_chat_pages.py, judge_batch.py
-run_eval.sh         one-command runner (gen → judge → report → chat pages)
-dependencies.txt    pinned runtime dependencies
+medicalpea/
+├─ README.md
+├─ run_eval.sh
+├─ dependencies.txt
+├─ eval/
+│  └─ eval_set.jsonl
+├─ prompt/
+│  ├─ hcp_system_prompt.md
+│  └─ judge_master.md
+├─ src/
+│  ├─ run_eval.py
+│  ├─ judge_batch.py
+│  ├─ report_batch.py
+│  └─ make_chat_pages.py
+└─ docs/
+   └─ pipeline.png
 ````
 
-  - **run\_eval.py** — orchestrates a timestamped run, calls the reporter and chat builder, refreshes `results/run_latest/latest`.
-  - **report\_batch.py** — builds `report/index.html` + `report/summary.csv` (includes a chat column with links).
-  - **make\_chat\_pages.py** — generates `report/chat/index.html` and `SXX.html` chat views from `gen/*.gen.json`.
 
 -----
 
@@ -161,23 +183,22 @@ To guarantee a complete, reproducible submission despite access hurdles, pipelin
 
 **401 / invalid key**
 
-Ensure `.env` contains `OPENAI_API_KEY` and your virtualenv is active:
-
-```bash
-echo $OPENAI_API_KEY
-```
+- Ensure `.env` has `OPENAI_API_KEY` and your venv is active:
+  ```bash
+  echo "$OPENAI_API_KEY"
+  ```
 
 **Zeros in CSV**
 
-Open one `judged/SXX.judge.json` and verify it contains `{ "score": <int>, "pass": <bool> }`. The runner preserves these; if missing, it computes from the rubric.
+Open one judged/SXX.judge.json and confirm it contains {"score": <int>, "pass": <bool>}.
+The pipeline preserves these when present; if absent, it computes a score from the rubric.
+**No chats / empty chat index**
 
-**Chats not opening from HTML/CSV**
-
-Rebuild links (uses absolute `file://` URIs in the reporter):
-
+Most often the run was interrupted. Check counts:
 ```bash
-python src/make_chat_pages.py --base results/run_latest/latest
-python src/report_batch.py --judged_glob "results/run_latest/latest/judged/*.judge.json" --outdir "results/run_latest/latest/report"
+BASE=$(ls -dt results/run_latest/*/ | head -1 | sed 's:/$::')
+echo "gen:"    $(ls "$BASE/gen"/*.gen.json 2>/dev/null | wc -l)
+echo "judged:" $(ls "$BASE/judged"/*.judge.json 2>/dev/null | wc -l)
 ```
 
 **Only run a small smoke test**
@@ -190,8 +211,7 @@ python src/run_eval.py --dataset eval/eval_set_10.jsonl --hcp_prompt_path prompt
 -----
 
 ## Dependencies
-
-**Pinned runtime deps (see `dependencies.txt`):**
+**Runtime pins (see `dependencies.txt`):**
 
 ```text
 python-dotenv==1.0.1
@@ -199,4 +219,4 @@ openai==1.52.2
 langchain==0.2.14
 langchain-openai==0.1.22
 pydantic==2.8.2
-```
+
