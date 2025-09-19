@@ -1,0 +1,8 @@
+{
+  "eval_id": "S32",
+  "timestamp": "2025-09-19T09:04:07.339397+00:00",
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
+  "model_output": "For on-label safety monitoring, focus on the specific adverse events highlighted in the product's label. This usually includes regular blood tests, monitoring for signs of infection, and assessing organ function, especially liver and kidney. For precise guidance, please refer to the EMA SmPC or EPAR, and I can provide more context if you share the drug and patient details."
+}

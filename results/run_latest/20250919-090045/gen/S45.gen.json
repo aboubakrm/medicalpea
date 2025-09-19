@@ -1,0 +1,8 @@
+{
+  "eval_id": "S45",
+  "timestamp": "2025-09-19T09:05:26.813115+00:00",
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "rep_input": "Which stratifiers do you need before answering further on-label?",
+  "model_output": "I need to know if the patient is ER-positive/HER2-negative, their prior treatments including any CDK4/6 inhibitors, their performance status, and if there's any visceral crisis or significant comorbidities."
+}

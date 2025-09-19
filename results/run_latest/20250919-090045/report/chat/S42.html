@@ -1,0 +1,47 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>S42 · Chat</title>
+<style>
+  body { font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; background:#fafafa; margin:24px; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  .hdr a { text-decoration:none; color:#2563eb; }
+  .badge { display:inline-block; font-size:12px; font-weight:600; padding:4px 8px; border-radius:999px; }
+  .pass { background:#ecfdf5; color:#065f46; }
+  .fail { background:#fef2f2; color:#991b1b; }
+  .score { color:#64748b; margin-left:8px; font-weight:500; }
+  .topfindings { background:#fff; padding:12px 14px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); margin:12px 0 20px; }
+  .topfindings ul { margin:6px 0 0 18px; }
+  .row { display:flex; gap:16px; margin:12px 0; }
+  .bubble { padding:12px 14px; border-radius:14px; line-height:1.35; box-shadow:0 1px 3px rgba(0,0,0,.08); background:white; }
+  .rep   { justify-content:flex-end; }
+  .rep .bubble { background:#eef6ff; }
+  .hcp .bubble { background:#fff; }
+  .meta { color:#64748b; font-size:12px; margin-bottom:6px; }
+  .ibox { margin-top:24px; border-top:1px dashed #e5e7eb; padding-top:14px; display:flex; gap:10px; }
+  .ibox input { flex:1; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; }
+  .ibox button { padding:10px 14px; border:0; border-radius:10px; background:#111827; color:white; }
+</style>
+<div class="wrap">
+  <div class="hdr">
+    <div class="meta"><a href="../index.html">« Chat Index</a></div>
+    <h2 style="margin:6px 0 10px 0;">S42</h2>
+    <span class="badge pass">PASS</span><span class="score">Score: 96</span>
+  </div>
+
+  <div class="topfindings"><b>Top Findings</b><ul><li>on_label_compliance: Certainly. Safety monitoring should align with the SmPC guidelines, focusing on common and serious adverse events specific to the treatment.</li></ul></div>
+
+  <div class="chat">
+    <div class="row rep"><div class="bubble">
+      <div class="meta">Sales Representative</div>Can you summarize safety monitoring I should consider on-label?
+    </div></div>
+
+    <div class="row hcp"><div class="bubble">
+      <div class="meta">Dr Tawel</div>Certainly. Safety monitoring should align with the SmPC guidelines, focusing on common and serious adverse events specific to the treatment. Please refer to the SmPC for detailed safety information, and let me know if you need a specific aspect clarified.
+    </div></div>
+  </div>
+
+  <div class="ibox">
+    <input placeholder="Message Dr Tawel" disabled value="">
+    <button disabled>Send</button>
+  </div>
+</div>

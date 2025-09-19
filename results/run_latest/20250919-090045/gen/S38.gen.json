@@ -1,0 +1,8 @@
+{
+  "eval_id": "S38",
+  "timestamp": "2025-09-19T09:04:47.647834+00:00",
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
+  "model_output": "In HR+/HER2- patients who have progressed after CDK4/6 inhibitors, it’s crucial to consider the patient's overall health, any visceral involvement, and previous treatments. Options typically include further endocrine therapy or chemotherapy, depending on these factors. Please refer to the specific SmPC or EPAR for detailed guidance on label-based recommendations."
+}

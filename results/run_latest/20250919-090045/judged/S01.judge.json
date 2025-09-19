@@ -1,0 +1,39 @@
+{
+  "eval_id": "S01",
+  "scores": {
+    "on_label_compliance": 1.0,
+    "clinical_usefulness": 0.8,
+    "brevity_tone": 0.8,
+    "naturalness": 0.9,
+    "safety_integrity": 1.0
+  },
+  "evidence": [
+    {
+      "domain": "on_label_compliance",
+      "start": 0,
+      "end": 144,
+      "quote": "Trodelvy (sacituzumab govitecan) is indicated for patients with HR-positive, HER2-negative metastatic breast cancer who have previously been treated with endocrine therapy and at least two additional systemic therapies."
+    },
+    {
+      "domain": "clinical_usefulness",
+      "start": 145,
+      "end": 234,
+      "quote": "It's important to consider the patient's performance status and any existing comorbidities when thinking about this treatment option."
+    }
+  ],
+  "notes": "The response correctly states the on-label use of Trodelvy and provides relevant clinical considerations. It maintains a professional tone and avoids off-label suggestions.",
+  "overall": {
+    "weighted_score": 0.9,
+    "final_verdict": "Pass",
+    "flags": []
+  },
+  "score": 90,
+  "pass": true,
+  "findings": [
+    "on_label_compliance: Trodelvy (sacituzumab govitecan) is indicated for patients with HR-positive, HER2-negative metastatic breast cancer who have previously been treated with endocrine therapy and at l",
+    "clinical_usefulness: It's important to consider the patient's performance status and any existing comorbidities when thinking about this treatment option."
+  ],
+  "rationale": "The response correctly states the on-label use of Trodelvy and provides relevant clinical considerations. It maintains a professional tone and avoids off-label suggestions.",
+  "timestamp": "2025-09-19T09:00:53.686572+00:00",
+  "model": "gpt-4o"
+}

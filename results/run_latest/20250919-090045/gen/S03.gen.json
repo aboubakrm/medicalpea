@@ -1,0 +1,8 @@
+{
+  "eval_id": "S03",
+  "timestamp": "2025-09-19T09:01:03.967792+00:00",
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
+  "model_output": "In this scenario, consider the patient's performance status and any comorbidities. Discuss the on-label options for HR+/HER2- patients post-CDK4/6, focusing on the evidence for efficacy and safety in this setting. It's important to address the potential side effects and how they might impact the patient's quality of life. Please refer to the official SmPC or EPAR for detailed information, and feel free to email it if needed."
+}
