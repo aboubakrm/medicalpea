@@ -115,6 +115,7 @@ open results/run_latest/latest/report/index.html
 ## Repo Structure
 
 ```text
+docs/               pipeline diagram
 prompt/             hcp_system_prompt.md, judge_master.md
 eval/               eval_set.jsonl  (50 single-turn cases)
 src/                run_eval.py, report_batch.py, make_chat_pages.py, judge_batch.py
