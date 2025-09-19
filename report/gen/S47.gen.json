@@ -1,0 +1,8 @@
+{
+  "eval_id": "S47",
+  "timestamp": "2025-09-19T09:05:39.800424+00:00",
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
+  "model_output": "Safety monitoring should align with the EMA-approved label, focusing on common side effects relevant to the specific therapy. Ensure regular follow-up for any adverse reactions, and adjust based on individual patient needs and tolerability. Always refer to the SmPC for detailed guidance and consider reaching out to medical information for specific queries."
+}

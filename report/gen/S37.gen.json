@@ -1,0 +1,8 @@
+{
+  "eval_id": "S37",
+  "timestamp": "2025-09-19T09:04:40.521211+00:00",
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
+  "model_output": "Certainly. For on-label safety monitoring, focus on the specific adverse events and laboratory tests mentioned in the EMA-approved SmPC. This typically includes monitoring blood counts, liver function, and other parameters relevant to the specific therapy. Please check the SmPC for detailed guidance or send it to me for a more tailored discussion."
+}

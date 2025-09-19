@@ -1,0 +1,8 @@
+{
+  "eval_id": "S07",
+  "timestamp": "2025-09-19T09:01:32.729281+00:00",
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
+  "model_output": "For on-label safety monitoring, focus on the key adverse events highlighted in the SmPC. These often include monitoring blood counts, liver function, and signs of infection or other drug-specific effects. For precise details, please refer to the specific drug's SmPC or EPAR."
+}

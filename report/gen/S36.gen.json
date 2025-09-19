@@ -1,0 +1,8 @@
+{
+  "eval_id": "S36",
+  "timestamp": "2025-09-19T09:04:32.958671+00:00",
+  "model": "gpt-4o",
+  "temperature": 0.6,
+  "rep_input": "Clinically, what are the on-label points I should know about Trodelvy in HR+/HER2- after prior CDK4/6?",
+  "model_output": "Trodelvy is indicated for HR+/HER2- breast cancer after at least two prior therapies, including endocrine therapy and a CDK4/6 inhibitor. The focus is on its use when other treatments have been exhausted, and it works by targeting Trop-2, a protein often overexpressed in these cancers. For detailed efficacy and safety data, please refer to the EMA-approved SmPC."
+}
