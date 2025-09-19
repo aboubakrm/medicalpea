@@ -119,9 +119,9 @@ judged/ SXX.judge.json # {score, pass, findings, rationale}
 report/
     index.html # summary table; links to chats
     summary.csv # eval_id, score, pass, chat
-chat/
-    index.html # chat gallery
-    S01.html … # Sales Rep (right/top), Dr Tawel (left)
+    chat/
+        index.html # chat gallery
+        S01.html … # Sales Rep (right/top), Dr Tawel (left)
 # + PASS/FAIL badge, Score, Top Findings
 ````
 
