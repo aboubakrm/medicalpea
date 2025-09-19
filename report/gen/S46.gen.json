@@ -1,8 +1,0 @@
-{
-  "eval_id": "S46",
-  "timestamp": "2025-09-19T09:05:33.492662+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Clinically, what are the on-label points I should know about Trodelvy in HR+/HER2- after prior CDK4/6?",
-  "model_output": "Trodelvy is indicated for metastatic triple-negative breast cancer, not HR+/HER2- disease. For HR+/HER2- after CDK4/6, on-label options would differ. Please consult the EMA SmPC for detailed information and consider the specific clinical context of your patient. If you'd like further clarification, feel free to send the relevant SmPC or EPAR by email."
-}

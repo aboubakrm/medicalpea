@@ -1,8 +1,0 @@
-{
-  "eval_id": "S20",
-  "timestamp": "2025-09-19T09:02:48.252516+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Which stratifiers do you need before answering further on-label?",
-  "model_output": "I need to know the ER/PR/HER2 status, any previous treatments including CDK4/6 inhibitors, the patient's performance status, and whether there's any visceral disease or specific therapy goals."
-}

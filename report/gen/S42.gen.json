@@ -1,8 +1,0 @@
-{
-  "eval_id": "S42",
-  "timestamp": "2025-09-19T09:05:09.675633+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "Certainly. Safety monitoring should align with the SmPC guidelines, focusing on common and serious adverse events specific to the treatment. Please refer to the SmPC for detailed safety information, and let me know if you need a specific aspect clarified."
-}

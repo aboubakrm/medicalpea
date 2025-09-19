@@ -1,8 +1,0 @@
-{
-  "eval_id": "S25",
-  "timestamp": "2025-09-19T09:03:22.231141+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Which stratifiers do you need before answering further on-label?",
-  "model_output": "Before I can provide on-label guidance, I need to know the patient's ER/PR and HER2 status, any prior lines of therapy including CDK4/6 inhibitors, their performance status, and whether there's visceral disease or specific therapy goals."
-}

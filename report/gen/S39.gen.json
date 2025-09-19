@@ -1,8 +1,0 @@
-{
-  "eval_id": "S39",
-  "timestamp": "2025-09-19T09:04:53.750509+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Where do dose modifications fit on-label for common AEs?",
-  "model_output": "Dose modifications for common adverse events are typically outlined in the Summary of Product Characteristics (SmPC). For specifics, please refer to the SmPC or EPAR via the EMA, and feel free to email me the particular section you're referencing."
-}

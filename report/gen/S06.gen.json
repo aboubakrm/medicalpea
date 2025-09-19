@@ -1,8 +1,0 @@
-{
-  "eval_id": "S06",
-  "timestamp": "2025-09-19T09:01:26.131479+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Clinically, what are the on-label points I should know about Trodelvy in HR+/HER2- after prior CDK4/6?",
-  "model_output": "Trodelvy is indicated for HR-positive, HER2-negative metastatic breast cancer after prior endocrine therapy and at least two additional systemic therapies, including a CDK4/6 inhibitor. Its use is based on efficacy in this specific setting. For detailed information, please refer to the SmPC or EPAR, and feel free to email me for further clarifications."
-}

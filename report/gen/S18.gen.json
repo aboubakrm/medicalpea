@@ -1,8 +1,0 @@
-{
-  "eval_id": "S18",
-  "timestamp": "2025-09-19T09:02:37.549569+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
-  "model_output": "For a patient with HR-positive, HER2-negative breast cancer who has progressed after CDK4/6 inhibitors, consider options like endocrine therapy or chemotherapy based on the specific clinical scenario. Discuss the patient's performance status, any existing visceral disease, and their goals for therapy. It's important to refer to the EMA SmPC for any specific treatment to ensure adherence to the label."
-}

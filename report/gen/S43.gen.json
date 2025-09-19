@@ -1,8 +1,0 @@
-{
-  "eval_id": "S43",
-  "timestamp": "2025-09-19T09:05:16.423890+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
-  "model_output": "For a patient with HR+/HER2- breast cancer who has progressed after CDK4/6 inhibitor therapy, it's important to consider the next line of therapy based on the EMA-approved label. Discuss the role of other endocrine therapies or targeted agents approved for this setting, and consider patient-specific factors like performance status and comorbidities. Please refer to the specific product labels for detailed guidance, and feel free to send any references you have by email."
-}

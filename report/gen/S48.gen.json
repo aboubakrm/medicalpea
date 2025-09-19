@@ -1,8 +1,0 @@
-{
-  "eval_id": "S48",
-  "timestamp": "2025-09-19T09:05:45.288630+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Patient HR+/HER2- progressed after CDK4/6; what key label-based caveats should I discuss?",
-  "model_output": "In this scenario, consider the patient’s performance status and any visceral disease. For HR+/HER2- after CDK4/6 progression, options may include endocrine therapies or chemotherapy, guided by the label. Please refer to the SmPC or EPAR for specific data and details."
-}

@@ -1,8 +1,0 @@
-{
-  "eval_id": "S22",
-  "timestamp": "2025-09-19T09:03:00.284537+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "Certainly. Safety monitoring should align with the product's label, focusing on known adverse effects and lab tests. Please refer to the specific SmPC or EPAR for detailed guidance. If you need more information, feel free to email the relevant document."
-}

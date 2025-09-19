@@ -1,8 +1,0 @@
-{
-  "eval_id": "S24",
-  "timestamp": "2025-09-19T09:03:17.420817+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Where do dose modifications fit on-label for common AEs?",
-  "model_output": "Dose modifications for adverse events are typically outlined in the product's SmPC. They provide guidance on managing side effects while maintaining treatment efficacy. For specific details, I recommend reviewing the SmPC or EPAR directly. If you need help accessing those, please let me know."
-}

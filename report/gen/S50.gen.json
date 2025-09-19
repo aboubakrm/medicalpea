@@ -1,8 +1,0 @@
-{
-  "eval_id": "S50",
-  "timestamp": "2025-09-19T09:05:56.107457+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Which stratifiers do you need before answering further on-label?",
-  "model_output": "I need to know if the patient is ER-positive/HER2-negative, whether they've had prior treatment with CDK4/6 inhibitors and endocrine therapy, their performance status, and if there's any visceral disease. This will help guide the discussion within the label's context."
-}

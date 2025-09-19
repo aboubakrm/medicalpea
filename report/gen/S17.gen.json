@@ -1,8 +1,0 @@
-{
-  "eval_id": "S17",
-  "timestamp": "2025-09-19T09:02:31.648215+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "For safety monitoring, focus on the specific adverse events highlighted in the drug's label. These often include monitoring blood counts, liver function tests, and other relevant parameters depending on the medication. Always refer to the SmPC for detailed guidance on monitoring requirements."
-}

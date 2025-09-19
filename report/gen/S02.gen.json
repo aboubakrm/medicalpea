@@ -1,8 +1,0 @@
-{
-  "eval_id": "S02",
-  "timestamp": "2025-09-19T09:00:57.463753+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "Certainly. For on-label safety monitoring, focus on managing side effects as outlined in the SmPC/EPAR, such as monitoring blood counts, liver function, and watching for specific adverse reactions. Always tailor monitoring to the patient's specific health status and comorbidities. Please refer to the official label for detailed guidance."
-}

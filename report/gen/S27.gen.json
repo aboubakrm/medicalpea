@@ -1,8 +1,0 @@
-{
-  "eval_id": "S27",
-  "timestamp": "2025-09-19T09:03:33.329630+00:00",
-  "model": "gpt-4o",
-  "temperature": 0.6,
-  "rep_input": "Can you summarize safety monitoring I should consider on-label?",
-  "model_output": "Certainly. On-label safety monitoring typically includes watching for known adverse effects of the therapy, such as blood counts, liver function, and any specific organ toxicity outlined in the SmPC. Please refer to the SmPC for the detailed safety profile and monitoring recommendations."
-}
