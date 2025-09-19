@@ -1,130 +1,240 @@
-import json, argparse, html
+#!/usr/bin/env python3
 from pathlib import Path
-from string import Template
+import argparse, json, html, glob, os
 
-THEME = {"bg":"#f8fafc","card":"#fff","border":"#e6e8eb","userc":"#fff","userb":"#e6e8eb","asstc":"#eef6ff","asstb":"#cfe0ff"}
-
-PAGE = Template("""<!doctype html><html><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>$title</title>
+PAGE = """<!doctype html>
+<meta charset="utf-8">
+<title>{eid} · Chat</title>
 <style>
-:root{--bg:$bg;--card:$card;--border:$border;--userc:$userc;--userb:$userb;--asstc:$asstc;--asstb:$asstb}
-*{box-sizing:border-box}
-body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:var(--bg)}
-.header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-.header .meta{font-size:14px;color:#555}
-.container{max-width:1000px;margin:24px auto;padding:0 12px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04);padding:16px;margin-bottom:16px}
-.badge{padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600}
-.badge.pass{background:#e9f9ee;color:#127c3a;border:1px solid #bfe8cc}
-.badge.fail{background:#fdeceb;color:#a31224;border:1px solid #f7c5ca}
-.small{font-size:12px;color:#666}
-.chat{display:flex;flex-direction:column;gap:12px;margin-top:12px}
-.bubble{max-width:75%;padding:12px 14px;border-radius:14px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
-.user{align-self:flex-start;background:var(--userc);border:1px solid var(--userb)}
-.assistant{align-self:flex-end;background:var(--asstc);border:1px solid var(--asstb)}
-.speaker{font-weight:700;margin-bottom:6px;opacity:.85}
-.input-wrap{display:flex;gap:8px;align-items:center;border:1px solid var(--border);border-radius:14px;padding:10px 12px;background:#fff}
-.input{flex:1;border:none;outline:none;font-size:14px;color:#333}
-.input::placeholder{color:#999}
-.btn{border:1px solid #d0d7ff;background:#e9f2ff;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer}
-.btn:active{transform:translateY(1px)}
-</style></head><body>
-<div class="header">
-  <div class="meta"><b>$eid</b> • Score: <b>$score</b> • <span class="badge $passcls">$passlbl</span></div>
-  <div class="small"><a href="../index.html">← Back to report</a> • <a href="index.html">All chats</a></div>
-</div>
-<div class="container">
-  <div class="card">
-    <div><b>Findings</b></div>
-    <ul class="small">$findings</ul>
-    <div class="small">$rationale</div>
+  body {{ font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; background:#fafafa; margin:24px; }}
+  .wrap {{ max-width: 900px; margin: 0 auto; }}
+  .hdr a {{ text-decoration:none; color:#2563eb; }}
+  .badge {{ display:inline-block; font-size:12px; font-weight:600; padding:4px 8px; border-radius:999px; }}
+  .pass {{ background:#ecfdf5; color:#065f46; }}
+  .fail {{ background:#fef2f2; color:#991b1b; }}
+  .score {{ color:#64748b; margin-left:8px; font-weight:500; }}
+  .topfindings {{ background:#fff; padding:12px 14px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); margin:12px 0 20px; }}
+  .topfindings ul {{ margin:6px 0 0 18px; }}
+  .row {{ display:flex; gap:16px; margin:12px 0; }}
+  .bubble {{ padding:12px 14px; border-radius:14px; line-height:1.35; box-shadow:0 1px 3px rgba(0,0,0,.08); background:white; }}
+  .rep   {{ justify-content:flex-end; }}
+  .rep .bubble {{ background:#eef6ff; }}
+  .hcp .bubble {{ background:#fff; }}
+  .meta {{ color:#64748b; font-size:12px; margin-bottom:6px; }}
+  .ibox {{ margin-top:24px; border-top:1px dashed #e5e7eb; padding-top:14px; display:flex; gap:10px; }}
+  .ibox input {{ flex:1; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; }}
+  .ibox button {{ padding:10px 14px; border:0; border-radius:10px; background:#111827; color:white; }}
+</style>
+<div class="wrap">
+  <div class="hdr">
+    <div class="meta"><a href="../index.html">« Chat Index</a></div>
+    <h2 style="margin:6px 0 10px 0;">{eid}</h2>
+    {badge_html}{score_html}
   </div>
-  <div class="card">
-    <div><b>Meta</b></div>
-    <div class="small">Model: $model • Temp: $temp • When: $ts</div>
-  </div>
-  <div class="card">
-    <div class="chat">
-      <div class="bubble assistant"><div class="speaker">Sales Representative</div>$rep</div>
-      <div class="bubble user"><div class="speaker">Dr Tawel</div>$hcp</div>
-    </div>
-    <div style="height:12px"></div>
-    <div class="input-wrap">
-      <input class="input" placeholder="Message Dr Tawel" />
-      <button class="btn">Send</button>
-    </div>
-    <div class="small" style="margin-top:6px;opacity:.7">Static preview for assessment purposes.</div>
-  </div>
-</div>
-</body></html>""")
 
-INDEX = Template("""<!doctype html><html><head>
-<meta charset="utf-8"><title>Chat Views</title>
+  {findings_html}
+
+  <div class="chat">
+    <div class="row rep"><div class="bubble">
+      <div class="meta">Sales Representative</div>{user_html}
+    </div></div>
+
+    <div class="row hcp"><div class="bubble">
+      <div class="meta">Dr Tawel</div>{asst_html}
+    </div></div>
+  </div>
+
+  <div class="ibox">
+    <input placeholder="Message Dr Tawel" disabled value="">
+    <button disabled>Send</button>
+  </div>
+</div>
+"""
+
+INDEX = """<!doctype html>
+<meta charset="utf-8">
+<title>Chat Index</title>
 <style>
-body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:24px}
-h1{margin-top:0}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
-.card{border:1px solid #eee;border-radius:12px;padding:10px;background:#fff}
-.pass{color:#127c3a}
-.fail{color:#a31224}
-.small{font-size:12px;color:#666}
-a{color:#2257d2;text-decoration:none}
-a:hover{text-decoration:underline}
-</style></head><body>
-<h1>Chat Views</h1>
-<div class="small">Base: $base • Theme: split</div>
-<div class="grid">
-$items
+  body {{ font-family:-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; background:#fafafa; margin:24px; }}
+  a {{ color:#2563eb; text-decoration:none; }}
+  .wrap {{ max-width:900px; margin:0 auto; }}
+  table {{ width:100%; border-collapse:collapse; background:white; box-shadow:0 1px 3px rgba(0,0,0,.08); }}
+  th, td {{ text-align:left; padding:10px 12px; border-bottom:1px solid #f1f5f9; }}
+  th {{ background:#f8fafc; font-weight:600; }}
+  .badge {{ display:inline-block; font-size:12px; font-weight:600; padding:2px 6px; border-radius:999px; }}
+  .pass {{ background:#ecfdf5; color:#065f46; }}
+  .fail {{ background:#fef2f2; color:#991b1b; }}
+  .score {{ color:#64748b; margin-left:8px; }}
+</style>
+<div class="wrap">
+  <h2>Chat Index</h2>
+  <table>
+    <tr><th>Eval ID</th><th>Status</th><th>Open</th></tr>
+    {rows}
+  </table>
 </div>
-</body></html>""")
+"""
 
-def load(p): 
-    return json.load(open(p,"r",encoding="utf-8"))
+USER_KEYS = ["user","user_input","prompt","sales_rep","rep_input","message","text"]
+ASST_KEYS = ["assistant","assistant_text","output","response","text","hcp_output","content"]
+
+def _walk_strings(obj):
+    if isinstance(obj, str):
+        yield obj
+    elif isinstance(obj, dict):
+        for v in obj.values():
+            yield from _walk_strings(v)
+    elif isinstance(obj, list):
+        for v in obj:
+            yield from _walk_strings(v)
+
+def _pick_best(strings, min_len=1):
+    items = [s.strip() for s in strings if isinstance(s,str) and s.strip()]
+    if not items: return ""
+    items.sort(key=len, reverse=True)
+    for s in items:
+        if len(s) >= min_len:
+            return s
+    return items[0]
+
+def _get_by_keys(j, keys):
+    for k in keys:
+        v = j.get(k)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+        if isinstance(v, dict):
+            c = v.get("content")
+            if isinstance(c, str) and c.strip():
+                return c.strip()
+        if isinstance(v, list):
+            for it in v:
+                if isinstance(it, dict):
+                    msg = it.get("message") or it.get("delta") or {}
+                    c = msg.get("content")
+                    if isinstance(c, str) and c.strip():
+                        return c.strip()
+    return ""
+
+def extract_user_text(j):
+    s = _get_by_keys(j, USER_KEYS)
+    if s: return s
+    if isinstance(j.get("input"), dict):
+        s = _get_by_keys(j["input"], USER_KEYS)
+        if s: return s
+    src = j.get("input") if isinstance(j.get("input"), dict) else j
+    return _pick_best(list(_walk_strings(src)), min_len=12)
+
+def extract_asst_text(j):
+    s = _get_by_keys(j, ASST_KEYS)
+    if s: return s
+    for k in ("gen_text", "hcp_output", "assistant_message", "assistant_response"):
+        v = j.get(k)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+    if "choices" in j:
+        s = _get_by_keys(j, ["choices"])
+        if s: return s
+    return _pick_best(list(_walk_strings(j)), min_len=24)
+
+def load_json(p: Path):
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="results/run_latest/latest")
+    ap.add_argument("--base", required=True)
     args = ap.parse_args()
 
-    base = Path(args.base)
-    gen_dir, judged_dir = base/"gen", base/"judged"
-    out_dir = base/"report"/"chat"; out_dir.mkdir(parents=True, exist_ok=True)
+    base = Path(args.base).resolve()
+    gen_dir = base / "gen"
+    judged_dir = base / "judged"
+    out_dir = base / "report" / "chat"
+    out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Use *all* gens as the source of truth (50 expected)
-    gens = {load(p)["eval_id"]: p for p in sorted(gen_dir.glob("*.gen.json"))}
-    judges = {}
+    gens = {}
+    for p in sorted(gen_dir.glob("*.gen.json")):
+        j = load_json(p)
+        eid = j.get("eval_id") or p.stem
+        gens[eid] = j
+
+    judged = {}
     for p in sorted(judged_dir.glob("*.judge.json")):
-        try:
-            j = load(p); judges[j.get("eval_id") or p.stem] = j
-        except Exception:
-            continue
+        j = load_json(p)
+        eid = j.get("eval_id") or p.stem.replace(".judge","")
+        judged[eid] = j
 
-    entries = []
-    for eid in sorted(gens.keys(), key=lambda x: int(x[1:]) if x[1:].isdigit() else x):
-        g = load(gens[eid])
-        j = judges.get(eid, {"score":0,"pass":False,"findings":[],"rationale":""})
-        rep = html.escape(g.get("rep_input",""))
-        hcp = html.escape(g.get("model_output",""))
-        findings = "".join(f"<li>{html.escape(x)}</li>" for x in (j.get("findings") or [])[:5]) or "<li><i>No findings</i></li>"
-        page = PAGE.substitute(
-            title=f"{eid} — Chat View", eid=eid,
-            bg=THEME["bg"], card=THEME["card"], border=THEME["border"],
-            userc=THEME["userc"], userb=THEME["userb"], asstc=THEME["asstc"], asstb=THEME["asstb"],
-            score=int(j.get("score",0)), passcls=("pass" if j.get("pass") else "fail"), passlbl=("PASS" if j.get("pass") else "FAIL"),
-            findings=findings, rationale=html.escape(j.get("rationale","")),
-            model=html.escape(g.get("model","")), temp=g.get("temperature",""), ts=html.escape(g.get("timestamp","")),
-            rep=rep, hcp=hcp
+    for eid, j in gens.items():
+        user = extract_user_text(j) or "(no rep message captured)"
+        asst = extract_asst_text(j) or "(no assistant message captured)"
+        user_html = html.escape(user).replace("\n", "<br>")
+        asst_html = html.escape(asst).replace("\n", "<br>")
+
+        jj = judged.get(eid, {})
+        ps = jj.get("pass")
+        score = jj.get("score")
+        if score is None and isinstance(jj.get("overall"), dict):
+            sc = jj["overall"].get("weighted_score") or jj["overall"].get("score")
+            if isinstance(sc, float):
+                score = round(sc*100) if sc <= 1.0 else int(sc)
+            elif isinstance(sc, int):
+                score = sc
+
+        if ps is not None:
+            cls = "pass" if ps else "fail"
+            txt = "PASS" if ps else "FAIL"
+            badge_html = f'<span class="badge {cls}">{txt}</span>'
+        else:
+            badge_html = ""
+
+        score_html = f'<span class="score">Score: {score}</span>' if score is not None else ""
+
+        findings_html = ""
+        f = jj.get("findings") or jj.get("evidence")
+        if isinstance(f, list) and f:
+            bullets = []
+            for item in f[:4]:
+                q = (item.get("quote") if isinstance(item, dict) else str(item)) or ""
+                q = html.escape(q).strip()
+                if q:
+                    bullets.append(f"<li>{q}</li>")
+            if bullets:
+                findings_html = f'<div class="topfindings"><b>Top Findings</b><ul>' + "\n".join(bullets) + "</ul></div>"
+
+        (out_dir / f"{eid}.html").write_text(
+            PAGE.format(
+                eid=eid,
+                user_html=user_html,
+                asst_html=asst_html,
+                badge_html=badge_html,
+                score_html=score_html,
+                findings_html=findings_html,
+            ),
+            encoding="utf-8",
         )
-        (out_dir/f"{eid}.html").write_text(page, encoding="utf-8")
-        entries.append((eid, int(j.get("score",0)), bool(j.get("pass",False))))
 
-    items=[]
-    for eid,score,passed in sorted(entries, key=lambda x:(-x[1],x[0])):
-        cls="pass" if passed else "fail"
-        items.append(f'<div class="card"><a href="{eid}.html"><b>{eid}</b></a><br><span class="{cls}">{"PASS" if passed else "FAIL"}</span> · {score}</div>')
-    (out_dir/"index.html").write_text(INDEX.substitute(base=str(base), items="\n".join(items)), encoding="utf-8")
-    print(f"Chat pages -> {out_dir} (count={len(entries)})")
+    rows = []
+    for eid in sorted(gens):
+        jj = judged.get(eid, {})
+        ps = jj.get("pass")
+        score = jj.get("score")
+        if score is None and isinstance(jj.get("overall"), dict):
+            sc = jj["overall"].get("weighted_score") or jj["overall"].get("score")
+            if isinstance(sc, float):
+                score = round(sc*100) if sc <= 1.0 else int(sc)
+            elif isinstance(sc, int):
+                score = sc
+        if ps is not None:
+            cls = "pass" if ps else "fail"
+            badge = f'<span class="badge {cls}">{"PASS" if ps else "FAIL"}</span>'
+        else:
+            badge = ""
+        sc = f'<span class="score">{score}</span>' if score is not None else ""
+        rows.append(f'<tr><td>{eid}</td><td>{badge} {sc}</td><td><a href="{eid}.html">Open chat</a></td></tr>')
+
+    (out_dir / "index.html").write_text(INDEX.format(rows="\n".join(rows)), encoding="utf-8")
+    print(f"Chat pages -> {out_dir} (count={len(gens)})")
 
 if __name__ == "__main__":
     main()

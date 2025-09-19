@@ -1,4 +1,9 @@
 import os, json, argparse, re, sys, subprocess
+import os
+for _k in ('OPENAI_PROXY','HTTP_PROXY','HTTPS_PROXY','ALL_PROXY','http_proxy','https_proxy','all_proxy'):
+    os.environ.pop(_k, None)
+if not os.environ.get('OPENAI_API_KEY'):
+    raise SystemExit('Missing OPENAI_API_KEY. Create .env from .env.example or export it in your shell.')
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 load_dotenv()
@@ -10,6 +15,8 @@ def ensure_dirs(*ps): [os.makedirs(x,exist_ok=True) for x in ps]
 def _escape_curly(t): return t.replace("{","{{").replace("}","}}")
 
 def main():
+    # Build a single OpenAI client and reuse it (avoids proxies kwarg issues)
+
     ap=argparse.ArgumentParser()
     ap.add_argument("--dataset", default="eval/eval_set.jsonl")
     ap.add_argument("--hcp_prompt_path", default="prompt/hcp_system_prompt.md")
@@ -126,8 +133,6 @@ def main():
     subprocess.run([sys.executable,"src/report_batch.py","--judged_glob",os.path.join(judged_dir,"*.judge.json"),"--outdir",report_dir], check=True)
 
     # Chat pages (split theme/layout + labels; SR right/top, Dr left/below)
-    subprocess.run([sys.executable,"src/make_chat_pages.py","--base",base_out,"--theme","split","--layout","split","--user_label","Sales Representative","--assistant_label","Dr Tawel"], check=False)
-
     # latest symlink
     latest=os.path.join(args.outdir,"latest")
     try:
