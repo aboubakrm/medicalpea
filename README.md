@@ -199,17 +199,3 @@ langchain==0.2.14
 langchain-openai==0.1.22
 pydantic==2.8.2
 ```
-
-**Install and optionally snapshot a full lock:**
-
-```bash
-pip install -r dependencies.txt
-pip freeze > requirements-lock.txt
-```
-
-**Dev-only (optional):**
-
-```text
-black==24.8.0
-ruff==0.5.6
-```
