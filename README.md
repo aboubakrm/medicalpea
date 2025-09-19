@@ -92,10 +92,10 @@ open "$BASE/report/chat/index.html"
 ```bash
 head -n 10 eval/eval_set.jsonl > eval/eval_set_10.jsonl
 ```
-# Option 1: via the runner
+### Option 1: via the runner
 DATASET=eval/eval_set_10.jsonl ./run_eval.sh
 
-# Option 2: direct python
+### Option 2: direct python
 python src/run_eval.py \
   --dataset eval/eval_set_10.jsonl \
   --hcp_prompt_path prompt/hcp_system_prompt.md \
