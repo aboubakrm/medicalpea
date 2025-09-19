@@ -1,0 +1,32 @@
+{
+  "eval_id": "S22",
+  "scores": {
+    "on_label_compliance": 1.0,
+    "clinical_usefulness": 0.8,
+    "brevity_tone": 1.0,
+    "naturalness": 1.0,
+    "safety_integrity": 1.0
+  },
+  "evidence": [
+    {
+      "domain": "on_label_compliance",
+      "start": 0,
+      "end": 97,
+      "quote": "Safety monitoring should align with the product's label, focusing on known adverse effects and lab tests."
+    }
+  ],
+  "notes": "The response correctly emphasizes staying within label guidelines and suggests referring to official documents for detailed safety monitoring. It is concise and maintains a professional tone.",
+  "overall": {
+    "weighted_score": 0.96,
+    "final_verdict": "Pass",
+    "flags": []
+  },
+  "score": 96,
+  "pass": true,
+  "findings": [
+    "on_label_compliance: Safety monitoring should align with the product's label, focusing on known adverse effects and lab tests."
+  ],
+  "rationale": "The response correctly emphasizes staying within label guidelines and suggests referring to official documents for detailed safety monitoring. It is concise and maintains a professional tone.",
+  "timestamp": "2025-09-19T09:03:05.335907+00:00",
+  "model": "gpt-4o"
+}
